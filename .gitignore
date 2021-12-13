@@ -71,6 +71,8 @@ instance/
 # Sphinx documentation
 docs/_build/
 
+.env
+
 # PyBuilder
 target/
 
@@ -127,3 +129,13 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+.vscode
+
+.terraform*
+
+node_modules
+.idea
+
+metastore_db
+spark-warehouse
