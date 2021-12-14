@@ -9,6 +9,8 @@
 # import sys
 # sys.setrecursionlimit(n)
 
+from eto.internal.model.coco_config import CocoConfig
+from eto.internal.model.coco_source import CocoSource
 from eto.internal.model.create_job_request import CreateJobRequest
 from eto.internal.model.dataset import Dataset
 from eto.internal.model.inline_response200 import InlineResponse200

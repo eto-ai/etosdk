@@ -49,7 +49,7 @@ def _create_api(api_name, client):
     return api(client)
 
 
-def list_datasets(project="default") -> Iterable[Dataset]:
+def list_datasets(project="default") -> list[Dataset]:
     """Lists existing datasets (dataset_id, uri, and other metadata)
 
     Parameters
@@ -77,7 +77,7 @@ def get_dataset(dataset_name: str) -> Dataset:
 
 def ingest_coco(dataset_name: str,
                 sources: Union[CocoSource, dict, Iterable[CocoSource], Iterable[dict]],
-                mode: str = None,
+                mode: str = 'append',
                 partition: str = None) -> Job:
     """Create a data ingestion job to convert coco datasets to Rikai format
     and create a new entry in the Eto dataset registry
@@ -89,12 +89,10 @@ def ingest_coco(dataset_name: str,
     sources: CocoSource, dict, Iterable[CocoSource], Iterable[dict]
         A list of raw data in Coco format. Each one has image_dir,
         annotations, and extras
-    mode: str
+    mode: str, default 'append'
         Defines behavior when the dataset already exists
         'overwrite' means existing data is replaced
         'append' means the new data will be added
-        'ignore' means the new data will be discarded
-        'error' means an error will be raised
     partition: str
         Which field to partition on (ex. 'split')
     """
@@ -106,7 +104,7 @@ def ingest_coco(dataset_name: str,
     if '.' in dataset_name:
         project_id, dataset_id = dataset_name.split('.', 1)
     else:
-        project_id, dataset_id = None, dataset_name
+        project_id, dataset_id = 'default', dataset_name
     conn.project_id = project_id
     conn.dataset_id = dataset_id
     if isinstance(sources, (CocoSource, dict)):
