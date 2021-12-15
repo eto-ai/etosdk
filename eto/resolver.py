@@ -1,7 +1,7 @@
 from typing import Iterable
 
-from rikai.parquet.resolver import DefaultResolver, Resolver
 from rikai.io import _normalize_uri
+from rikai.parquet.resolver import DefaultResolver, Resolver
 
 import eto
 

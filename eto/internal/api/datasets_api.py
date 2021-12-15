@@ -16,8 +16,8 @@ from eto.internal.api_client import Endpoint as _Endpoint
 from eto.internal.model.dataset import Dataset
 from eto.internal.model.inline_response200 import InlineResponse200
 from eto.internal.model.inline_response404 import InlineResponse404
-from eto.internal.model_utils import (check_allowed_values,  # noqa: F401
-                                      check_validations, date, datetime,
+from eto.internal.model_utils import check_allowed_values  # noqa: F401
+from eto.internal.model_utils import (check_validations, date, datetime,
                                       file_type, none_type,
                                       validate_and_convert_types)
 
