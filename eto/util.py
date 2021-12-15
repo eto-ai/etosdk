@@ -6,7 +6,6 @@ from typing import Optional
 
 
 class Config:
-
     @classmethod
     def load(cls):
         """Load the default profile from XDG_CONFIG_HOME/eto/eto.conf"""

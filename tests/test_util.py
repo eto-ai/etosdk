@@ -13,7 +13,7 @@ def mock_settings_env_vars(tmp_path):
 
 
 def test_config():
-    Config.create_config('http://url', 'token')
+    Config.create_config("http://url", "token")
     conf = Config.load()
-    assert conf['url'] == 'http://url'
-    assert conf['token'] == 'token'
+    assert conf["url"] == "http://url"
+    assert conf["token"] == "token"

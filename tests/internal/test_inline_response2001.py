@@ -12,11 +12,14 @@ import sys
 import unittest
 
 import eto.internal
-from eto.internal.model.dataset import Dataset
+from eto.internal.model.job import Job
+
+globals()["Job"] = Job
+from eto.internal.model.inline_response2001 import InlineResponse2001
 
 
-class TestDataset(unittest.TestCase):
-    """Dataset unit test stubs"""
+class TestInlineResponse2001(unittest.TestCase):
+    """InlineResponse2001 unit test stubs"""
 
     def setUp(self):
         pass
@@ -24,10 +27,10 @@ class TestDataset(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def testDataset(self):
-        """Test Dataset"""
+    def testInlineResponse2001(self):
+        """Test InlineResponse2001"""
         # FIXME: construct object with mandatory attributes with example values
-        # model = Dataset()  # noqa: E501
+        # model = InlineResponse2001()  # noqa: E501
         pass
 
 

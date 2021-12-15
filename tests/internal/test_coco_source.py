@@ -12,11 +12,11 @@ import sys
 import unittest
 
 import eto.internal
-from eto.internal.model.dataset import Dataset
+from eto.internal.model.coco_source import CocoSource
 
 
-class TestDataset(unittest.TestCase):
-    """Dataset unit test stubs"""
+class TestCocoSource(unittest.TestCase):
+    """CocoSource unit test stubs"""
 
     def setUp(self):
         pass
@@ -24,10 +24,10 @@ class TestDataset(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def testDataset(self):
-        """Test Dataset"""
+    def testCocoSource(self):
+        """Test CocoSource"""
         # FIXME: construct object with mandatory attributes with example values
-        # model = Dataset()  # noqa: E501
+        # model = CocoSource()  # noqa: E501
         pass
 
 

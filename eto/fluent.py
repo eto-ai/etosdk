@@ -10,12 +10,19 @@ from eto.internal.api_client import ApiClient
 from eto.internal.apis import DatasetsApi
 from eto.internal.configuration import Configuration
 from eto.internal.model.dataset import Dataset
-from eto.resolver import register_resolver
 from eto.internal.model.job import Job
+from eto.resolver import register_resolver
 from eto.spark import get_session
 from eto.util import get_dataset_ref_parts
 
-__all__ = ["list_datasets", "get_dataset", "ingest_coco", "CocoSource", "init", "configure"]
+__all__ = [
+    "list_datasets",
+    "get_dataset",
+    "ingest_coco",
+    "CocoSource",
+    "init",
+    "configure",
+]
 
 _LAZY_CLIENTS = {}
 
@@ -41,15 +48,12 @@ def _get_client() -> ApiClient:
 def _create_api(api_name, client):
     if api_name not in ["datasets", "jobs"]:
         raise NotImplementedError("Only datasets and jobs api supported")
-    cls_map = {
-        "datasets": DatasetsApi,
-        "jobs": JobsApi
-    }
+    cls_map = {"datasets": DatasetsApi, "jobs": JobsApi}
     api = cls_map[api_name]
     return api(client)
 
 
-def list_datasets(project="default") -> Iterable[Dataset]:
+def list_datasets(project="default") -> list[Dataset]:
     """Lists existing datasets (dataset_id, uri, and other metadata)
 
     Parameters
@@ -58,7 +62,7 @@ def list_datasets(project="default") -> Iterable[Dataset]:
         List all datasets in a particular project.
         If omitted just lists datasets in 'default'
     """
-    return _get_api("datasets").list_datasets(project)['datasets']
+    return _get_api("datasets").list_datasets(project)["datasets"]
 
 
 def get_dataset(dataset_name: str) -> Dataset:
@@ -71,14 +75,16 @@ def get_dataset(dataset_name: str) -> Dataset:
         If no project is specified, assume it's the 'default' project
     """
     project_id, dataset_id = get_dataset_ref_parts(dataset_name)
-    project_id = project_id or 'default'
+    project_id = project_id or "default"
     return _get_api("datasets").get_dataset(project_id, dataset_id)
 
 
-def ingest_coco(dataset_name: str,
-                sources: Union[CocoSource, dict, Iterable[CocoSource], Iterable[dict]],
-                mode: str = None,
-                partition: str = None) -> Job:
+def ingest_coco(
+    dataset_name: str,
+    source: Union[CocoSource, dict, Iterable[CocoSource], Iterable[dict]],
+    mode: str = "append",
+    partition: str = None,
+) -> Job:
     """Create a data ingestion job to convert coco datasets to Rikai format
     and create a new entry in the Eto dataset registry
 
@@ -86,41 +92,55 @@ def ingest_coco(dataset_name: str,
     ----------
     dataset_name: str
         The name of the new Eto dataset
-    sources: CocoSource, dict, Iterable[CocoSource], Iterable[dict]
-        A list of raw data in Coco format. Each one has image_dir,
-        annotations, and extras
-    mode: str
+    source: dict, Iterable[dict], CocoSource, Iterable[CocoSource]
+        Specification for the raw data sources in Coco format. For multiple
+        sources, just specify all of the sources in a single list
+        Example: {'image_dir': 's3://path/to/images',
+                  'annotation': 's3://path/to/annotation',
+                  'extras': {'split': 'train'}}
+    mode: str, default 'append'
         Defines behavior when the dataset already exists
         'overwrite' means existing data is replaced
         'append' means the new data will be added
-        'ignore' means the new data will be discarded
-        'error' means an error will be raised
-    partition: str
+    partition: str or list of str
         Which field to partition on (ex. 'split')
     """
     conn = CocoConnector(_get_api("jobs"))
-    if mode is not None:
-        conn.mode = mode
-    if partition is not None:
-        conn.partition = partition
-    if '.' in dataset_name:
-        project_id, dataset_id = dataset_name.split('.', 1)
+    if "." in dataset_name:
+        project_id, dataset_id = dataset_name.split(".", 1)
     else:
-        project_id, dataset_id = None, dataset_name
+        project_id, dataset_id = "default", dataset_name
     conn.project_id = project_id
     conn.dataset_id = dataset_id
-    if isinstance(sources, (CocoSource, dict)):
-        sources = [sources]
-    [conn.add_source(s if isinstance(s, CocoSource) else CocoSource(**s))
-     for s in sources]
+    if isinstance(source, (CocoSource, dict)):
+        source = [source]
+    [
+        conn.add_source(s if isinstance(s, CocoSource) else CocoSource(**s))
+        for s in source
+    ]
+    conn.mode = mode or "append"
+    if partition is not None:
+        conn.partition = [partition] if isinstance(partition, str) else partition
     return conn.ingest()
 
 
 def init():
     # monkey patch pandas
-    def read_eto(dataset_name: str) -> pd.DataFrame:
+    def read_eto(dataset_name: str, limit: int = None) -> pd.DataFrame:
+        """Read an Eto dataset as a pandas dataframe
+
+        Parameters
+        ----------
+        dataset_name: str
+            The name of the dataset to be read
+        limit: Optional[int]
+            The max rows to retrieve. If omitted then all rows are retrieved
+        """
         uri = get_dataset(dataset_name).uri
-        return get_session().read.format("rikai").load(uri).toPandas()
+        sdf = get_session().read.format("rikai").load(uri)
+        if limit is not None and limit > 0:
+            sdf = sdf.limit(limit)
+        return sdf.toPandas()
 
     pd.read_eto = read_eto
 

@@ -11,18 +11,15 @@
 import re  # noqa: F401
 import sys  # noqa: F401
 
-from eto.internal.api_client import ApiClient, Endpoint as _Endpoint
-from eto.internal.model_utils import (  # noqa: F401
-    check_allowed_values,
-    check_validations,
-    date,
-    datetime,
-    file_type,
-    none_type,
-    validate_and_convert_types
-)
+from eto.internal.api_client import ApiClient
+from eto.internal.api_client import Endpoint as _Endpoint
 from eto.internal.model.create_job_request import CreateJobRequest
+from eto.internal.model.inline_response2001 import InlineResponse2001
 from eto.internal.model.job import Job
+from eto.internal.model_utils import (check_allowed_values,  # noqa: F401
+                                      check_validations, date, datetime,
+                                      file_type, none_type,
+                                      validate_and_convert_types)
 
 
 class JobsApi(object):
@@ -38,66 +35,144 @@ class JobsApi(object):
         self.api_client = api_client
         self.create_ingest_job_endpoint = _Endpoint(
             settings={
-                'response_type': (Job,),
-                'auth': [],
-                'endpoint_path': '/api/v1/projects/{project_id}/ingest',
-                'operation_id': 'create_ingest_job',
-                'http_method': 'POST',
-                'servers': None,
+                "response_type": (Job,),
+                "auth": [],
+                "endpoint_path": "/api/v1/projects/{project_id}/ingest",
+                "operation_id": "create_ingest_job",
+                "http_method": "POST",
+                "servers": None,
             },
             params_map={
-                'all': [
-                    'project_id',
-                    'body',
+                "all": [
+                    "project_id",
+                    "body",
                 ],
-                'required': [
-                    'project_id',
-                    'body',
+                "required": [
+                    "project_id",
+                    "body",
                 ],
-                'nullable': [
-                ],
-                'enum': [
-                ],
-                'validation': [
-                ]
+                "nullable": [],
+                "enum": [],
+                "validation": [],
             },
             root_map={
-                'validations': {
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "project_id": (str,),
+                    "body": (CreateJobRequest,),
                 },
-                'allowed_values': {
+                "attribute_map": {
+                    "project_id": "project_id",
                 },
-                'openapi_types': {
-                    'project_id':
-                        (str,),
-                    'body':
-                        (CreateJobRequest,),
+                "location_map": {
+                    "project_id": "path",
+                    "body": "body",
                 },
-                'attribute_map': {
-                    'project_id': 'project_id',
-                },
-                'location_map': {
-                    'project_id': 'path',
-                    'body': 'body',
-                },
-                'collection_format_map': {
-                }
+                "collection_format_map": {},
             },
             headers_map={
-                'accept': [
-                    '*/*'
-                ],
-                'content_type': [],
+                "accept": ["*/*"],
+                "content_type": [],
             },
-            api_client=api_client
+            api_client=api_client,
+        )
+        self.get_ingest_job_endpoint = _Endpoint(
+            settings={
+                "response_type": (Job,),
+                "auth": [],
+                "endpoint_path": "/api/v1/projects/{project_id}/ingest/{job_id}",
+                "operation_id": "get_ingest_job",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "project_id",
+                    "job_id",
+                ],
+                "required": [
+                    "project_id",
+                    "job_id",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "project_id": (str,),
+                    "job_id": (str,),
+                },
+                "attribute_map": {
+                    "project_id": "project_id",
+                    "job_id": "job_id",
+                },
+                "location_map": {
+                    "project_id": "path",
+                    "job_id": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["*/*"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.list_ingest_job_endpoint = _Endpoint(
+            settings={
+                "response_type": (InlineResponse2001,),
+                "auth": [],
+                "endpoint_path": "/api/v1/projects/{project_id}/ingest",
+                "operation_id": "list_ingest_job",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "project_id",
+                    "page_size",
+                    "page_token",
+                ],
+                "required": [
+                    "project_id",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "project_id": (str,),
+                    "page_size": (float,),
+                    "page_token": (float,),
+                },
+                "attribute_map": {
+                    "project_id": "project_id",
+                    "page_size": "page_size",
+                    "page_token": "page_token",
+                },
+                "location_map": {
+                    "project_id": "path",
+                    "page_size": "query",
+                    "page_token": "query",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["*/*"],
+                "content_type": [],
+            },
+            api_client=api_client,
         )
 
-    def create_ingest_job(
-        self,
-        project_id,
-        body,
-        **kwargs
-    ):
-        """Create a dataset Ingestion job  # noqa: E501
+    def create_ingest_job(self, project_id, body, **kwargs):
+        """Create a dataset ingestion job  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
@@ -135,28 +210,113 @@ class JobsApi(object):
                 If the method is called asynchronously, returns the request
                 thread.
         """
-        kwargs['async_req'] = kwargs.get(
-            'async_req', False
-        )
-        kwargs['_return_http_data_only'] = kwargs.get(
-            '_return_http_data_only', True
-        )
-        kwargs['_preload_content'] = kwargs.get(
-            '_preload_content', True
-        )
-        kwargs['_request_timeout'] = kwargs.get(
-            '_request_timeout', None
-        )
-        kwargs['_check_input_type'] = kwargs.get(
-            '_check_input_type', True
-        )
-        kwargs['_check_return_type'] = kwargs.get(
-            '_check_return_type', True
-        )
-        kwargs['_host_index'] = kwargs.get('_host_index')
-        kwargs['project_id'] = \
-            project_id
-        kwargs['body'] = \
-            body
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["project_id"] = project_id
+        kwargs["body"] = body
         return self.create_ingest_job_endpoint.call_with_http_info(**kwargs)
 
+    def get_ingest_job(self, project_id, job_id, **kwargs):
+        """Get a given dataset ingestion jobs  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.get_ingest_job(project_id, job_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            project_id (str):
+            job_id (str):
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            Job
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["project_id"] = project_id
+        kwargs["job_id"] = job_id
+        return self.get_ingest_job_endpoint.call_with_http_info(**kwargs)
+
+    def list_ingest_job(self, project_id, **kwargs):
+        """List all dataset ingestion jobs  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.list_ingest_job(project_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            project_id (str):
+
+        Keyword Args:
+            page_size (float): [optional]
+            page_token (float): [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            InlineResponse2001
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["project_id"] = project_id
+        return self.list_ingest_job_endpoint.call_with_http_info(**kwargs)

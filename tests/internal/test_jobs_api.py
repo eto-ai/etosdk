@@ -26,10 +26,24 @@ class TestJobsApi(unittest.TestCase):
     def test_create_ingest_job(self):
         """Test case for create_ingest_job
 
-        Create a dataset Ingestion job  # noqa: E501
+        Create a dataset ingestion job  # noqa: E501
+        """
+        pass
+
+    def test_get_ingest_job(self):
+        """Test case for get_ingest_job
+
+        Get a given dataset ingestion jobs  # noqa: E501
+        """
+        pass
+
+    def test_list_ingest_job(self):
+        """Test case for list_ingest_job
+
+        List all dataset ingestion jobs  # noqa: E501
         """
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
