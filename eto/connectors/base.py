@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from eto.internal.api.jobs_api import JobsApi, CreateJobRequest, Job
+from eto.internal.api.jobs_api import CreateJobRequest, Job, JobsApi
 
 
 class Connector(ABC):
@@ -29,8 +29,8 @@ class Connector(ABC):
             'append', 'overwrite',
         """
         mode = mode.lower().strip()
-        if mode not in ['append', 'overwrite', 'error', 'ignore']:
-            raise NotImplementedError(f'Unrecognized mode {mode}')
+        if mode not in ["append", "overwrite", "error", "ignore"]:
+            raise NotImplementedError(f"Unrecognized mode {mode}")
         self._mode = mode
 
     @property
@@ -40,8 +40,8 @@ class Connector(ABC):
     @connector_type.setter
     def connector_type(self, connector_type: str):
         connector_type = connector_type.lower().strip()
-        if connector_type != 'coco':
-            raise NotImplementedError('Only the Coco connector is supported')
+        if connector_type != "coco":
+            raise NotImplementedError("Only the Coco connector is supported")
         self._connector_type = connector_type
 
     @property
