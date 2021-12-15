@@ -1,6 +1,7 @@
 from typing import Iterable
 
 from rikai.parquet.resolver import DefaultResolver, Resolver
+from rikai.io import _normalize_uri
 
 import eto
 
@@ -12,7 +13,7 @@ class EtoDatasetResolver(DefaultResolver):
 
     def resolve(self, dataset_name: str) -> Iterable[str]:
         dataset = eto.get_dataset(dataset_name)
-        return super().resolve(dataset.uri)
+        return super().resolve(_normalize_uri(dataset.uri))
 
 
 def register_resolver():
