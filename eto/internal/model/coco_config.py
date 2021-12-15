@@ -89,7 +89,7 @@ class CocoConfig(ModelNormal):
         return {
             'dataset_name': (str,),  # noqa: E501
             'mode': (str,),  # noqa: E501
-            'partition': (str,),  # noqa: E501
+            'partition': ([str],),  # noqa: E501
             'source': ([CocoSource],),  # noqa: E501
         }
 
@@ -148,7 +148,7 @@ class CocoConfig(ModelNormal):
                                 _visited_composed_classes = (Animal,)
             dataset_name (str): the name of the dataset to be created. [optional]  # noqa: E501
             mode (str): append or overwrite if dataset already exists. [optional]  # noqa: E501
-            partition (str): which field to partition the dataset on. [optional]  # noqa: E501
+            partition ([str]): which field(s) to partition the dataset on. [optional]  # noqa: E501
             source ([CocoSource]): [optional]  # noqa: E501
         """
 
@@ -233,7 +233,7 @@ class CocoConfig(ModelNormal):
                                 _visited_composed_classes = (Animal,)
             dataset_name (str): the name of the dataset to be created. [optional]  # noqa: E501
             mode (str): append or overwrite if dataset already exists. [optional]  # noqa: E501
-            partition (str): which field to partition the dataset on. [optional]  # noqa: E501
+            partition ([str]): which field(s) to partition the dataset on. [optional]  # noqa: E501
             source ([CocoSource]): [optional]  # noqa: E501
         """
 

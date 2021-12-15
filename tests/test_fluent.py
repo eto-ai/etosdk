@@ -30,26 +30,26 @@ def test_get_api():
     assert api.api_client.configuration.host == 'http://host'
 
 
-def test_list_datasets(spark):
+def test_list_datasets():
     eto.configure()
-    datasets = eto.list_datasets('test_project')
+    datasets = eto.list_datasets('eto_int_test')
     assert len(datasets) == 1
-    assert datasets[0]['project_id'] == 'test_project'
-    assert datasets[0]['dataset_id'] == 'test'
+    assert datasets[0]['project_id'] == 'eto_int_test'
+    assert datasets[0]['dataset_id'] == 'coco'
 
 
 def test_get_dataset():
     eto.configure()
-    d = eto.get_dataset('test_project.test')
-    assert d['project_id'] == 'test_project'
-    assert d['dataset_id'] == 'test'
-    assert d['uri'] is not None
+    d = eto.get_dataset('eto_int_test.coco')
+    assert d['project_id'] == 'eto_int_test'
+    assert d['dataset_id'] == 'coco'
+    assert d['uri'] == 's3a://eto-demo-data/datasets/coco'
 
 
 def test_pandas_reader():
     eto.configure()
-    df = pd.read_eto('test_project.test')
-    assert len(df) > 0
+    df = pd.read_eto('eto_int_test.coco', limit=10)
+    assert len(df) == 10
 
 
 def test_rikai_resolver():
@@ -59,8 +59,8 @@ def test_rikai_resolver():
 def test_ingest_coco():
     eto.configure()
     job = eto.ingest_coco('test',
-                          sources={'image_dir': 's3://image_dir',
-                                   'annotation': 's3://annotations',
-                                   'extras': {'foo': 'bar'}},
+                          source={'image_dir': 's3://image_dir',
+                                  'annotation': 's3://annotations',
+                                  'extras': {'foo': 'bar'}},
                           partition='split')
     assert job['id'] is not None

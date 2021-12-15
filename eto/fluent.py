@@ -76,7 +76,7 @@ def get_dataset(dataset_name: str) -> Dataset:
 
 
 def ingest_coco(dataset_name: str,
-                sources: Union[CocoSource, dict, Iterable[CocoSource], Iterable[dict]],
+                source: Union[CocoSource, dict, Iterable[CocoSource], Iterable[dict]],
                 mode: str = 'append',
                 partition: str = None) -> Job:
     """Create a data ingestion job to convert coco datasets to Rikai format
@@ -86,39 +86,53 @@ def ingest_coco(dataset_name: str,
     ----------
     dataset_name: str
         The name of the new Eto dataset
-    sources: CocoSource, dict, Iterable[CocoSource], Iterable[dict]
-        A list of raw data in Coco format. Each one has image_dir,
-        annotations, and extras
+    source: dict, Iterable[dict], CocoSource, Iterable[CocoSource]
+        Specification for the raw data sources in Coco format. For multiple
+        sources, just specify all of the sources in a single list
+        Example: {'image_dir': 's3://path/to/images',
+                  'annotation': 's3://path/to/annotation',
+                  'extras': {'split': 'train'}}
     mode: str, default 'append'
         Defines behavior when the dataset already exists
         'overwrite' means existing data is replaced
         'append' means the new data will be added
-    partition: str
+    partition: str or list of str
         Which field to partition on (ex. 'split')
     """
     conn = CocoConnector(_get_api("jobs"))
-    if mode is not None:
-        conn.mode = mode
-    if partition is not None:
-        conn.partition = partition
     if '.' in dataset_name:
         project_id, dataset_id = dataset_name.split('.', 1)
     else:
         project_id, dataset_id = 'default', dataset_name
     conn.project_id = project_id
     conn.dataset_id = dataset_id
-    if isinstance(sources, (CocoSource, dict)):
-        sources = [sources]
+    if isinstance(source, (CocoSource, dict)):
+        source = [source]
     [conn.add_source(s if isinstance(s, CocoSource) else CocoSource(**s))
-     for s in sources]
+     for s in source]
+    conn.mode = mode or 'append'
+    if partition is not None:
+        conn.partition = [partition] if isinstance(partition, str) else partition
     return conn.ingest()
 
 
 def init():
     # monkey patch pandas
-    def read_eto(dataset_name: str) -> pd.DataFrame:
+    def read_eto(dataset_name: str, limit: int = None) -> pd.DataFrame:
+        """Read an Eto dataset as a pandas dataframe
+
+        Parameters
+        ----------
+        dataset_name: str
+            The name of the dataset to be read
+        limit: Optional[int]
+            The max rows to retrieve. If omitted then all rows are retrieved
+        """
         uri = get_dataset(dataset_name).uri
-        return get_session().read.format("rikai").load(uri).toPandas()
+        sdf = get_session().read.format("rikai").load(uri)
+        if limit is not None and limit > 0:
+            sdf = sdf.limit(limit)
+        return sdf.toPandas()
 
     pd.read_eto = read_eto
 
