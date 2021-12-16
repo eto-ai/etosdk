@@ -18,17 +18,17 @@ def mock_settings_env_vars(tmp_path):
 
 
 def test_configure():
-    eto.configure("http://host", "token")
+    eto.configure("account", "token")
     conf = Config.load()
-    assert conf["url"] == "http://host"
+    assert conf["url"] == "https://account.eto.ai"
     assert conf["token"] == "token"
 
 
 def test_get_api():
-    eto.configure("http://host", "token")
+    eto.configure("account", "token")
     api = _get_api("datasets")
     assert isinstance(api, DatasetsApi)
-    assert api.api_client.configuration.host == "http://host"
+    assert api.api_client.configuration.host == "https://account.eto.ai"
 
 
 def test_list_datasets():

@@ -37,6 +37,8 @@ def _get_api(api_name: str):
 def _get_client() -> ApiClient:
     sdk_conf = Config.load()
     url = sdk_conf["url"]
+    if url.endswith('/'):
+        url = url[:-1]
     conf = Configuration(host=url)
     return ApiClient(
         configuration=conf,
@@ -148,21 +150,27 @@ def init():
     register_resolver()
 
 
+def _get_account_url(account):
+    return f"https://{account}.eto.ai"
+
+
 def configure(
-    url: Optional[str] = None,
+    account: Optional[str] = None,
     token: Optional[str] = None,
 ):
     """One time setup to configure the SDK to connect to Eto API
 
     Parameters
     ----------
-    url: str, default None
-        host url for the Eto API backend. If not supplied then will default
-        to ETO_HOST_URL environment variable
+    account: str, default None
+        Your Eto account name
     token: str, default None
         the api token. If omitted then will default to ETO_API_TOKEN
         environment variable
     """
+    url = None
+    if account is not None:
+        url = _get_account_url(account)
     url = url or Config.ETO_HOST_URL
     token = token or Config.ETO_API_TOKEN
     if url is None:
