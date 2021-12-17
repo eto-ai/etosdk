@@ -13,6 +13,7 @@ from eto.internal.model.coco_config import CocoConfig
 from eto.internal.model.coco_source import CocoSource
 from eto.internal.model.create_job_request import CreateJobRequest
 from eto.internal.model.dataset import Dataset
+from eto.internal.model.dataset_details import DatasetDetails
 from eto.internal.model.inline_response200 import InlineResponse200
 from eto.internal.model.inline_response404 import InlineResponse404
 from eto.internal.model.inline_response2001 import InlineResponse2001

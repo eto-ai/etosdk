@@ -2,6 +2,8 @@ from typing import Iterable, Optional, Union
 from urllib.parse import urlparse
 
 import pandas as pd
+from rikai.io import _normalize_uri
+from rikai.parquet.dataset import Dataset as RikaiDataset
 
 from eto.config import Config
 from eto.connectors.coco import CocoConnector, CocoSource
@@ -12,7 +14,6 @@ from eto.internal.configuration import Configuration
 from eto.internal.model.dataset import Dataset
 from eto.internal.model.job import Job
 from eto.resolver import register_resolver
-from eto.spark import get_session
 from eto.util import get_dataset_ref_parts
 
 __all__ = [
@@ -37,7 +38,7 @@ def _get_api(api_name: str):
 def _get_client() -> ApiClient:
     sdk_conf = Config.load()
     url = sdk_conf["url"]
-    if url.endswith('/'):
+    if url.endswith("/"):
         url = url[:-1]
     conf = Configuration(host=url)
     return ApiClient(
@@ -136,13 +137,22 @@ def init():
         dataset_name: str
             The name of the dataset to be read
         limit: Optional[int]
-            The max rows to retrieve. If omitted then all rows are retrieved
+            The max rows to retrieve. If omitted or <=0 then all rows are retrieved
         """
-        uri = get_dataset(dataset_name).uri
-        sdf = get_session().read.format("rikai").load(uri)
-        if limit is not None and limit > 0:
-            sdf = sdf.limit(limit)
-        return sdf.toPandas()
+        uri = _normalize_uri(get_dataset(dataset_name).uri)
+        dataset = RikaiDataset(uri)
+        if limit is None or limit <= 0:
+            return pd.DataFrame(dataset)
+        else:
+            rows = [None] * limit
+            i = 0
+            for i, r in enumerate(dataset):
+                rows[i] = r
+                if i == limit - 1:
+                    break
+            if i < limit - 1:
+                rows = rows[: i + 1]
+            return pd.DataFrame(rows)
 
     pd.read_eto = read_eto
 

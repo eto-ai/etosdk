@@ -12,8 +12,8 @@ import re  # noqa: F401
 import sys  # noqa: F401
 
 from eto.internal.exceptions import ApiAttributeError
-from eto.internal.model_utils import ApiTypeError  # noqa: F401
-from eto.internal.model_utils import (ModelComposed, ModelNormal, ModelSimple,
+from eto.internal.model_utils import (ApiTypeError,  # noqa: F401
+                                      ModelComposed, ModelNormal, ModelSimple,
                                       cached_property,
                                       change_keys_js_to_python,
                                       convert_js_args_to_python_args, date,
@@ -91,9 +91,9 @@ class CocoConfig(ModelNormal):
         lazy_import()
         return {
             "dataset_name": (str,),  # noqa: E501
+            "source": ([CocoSource],),  # noqa: E501
             "mode": (str,),  # noqa: E501
             "partition": ([str],),  # noqa: E501
-            "source": ([CocoSource],),  # noqa: E501
         }
 
     @cached_property
@@ -102,9 +102,9 @@ class CocoConfig(ModelNormal):
 
     attribute_map = {
         "dataset_name": "dataset_name",  # noqa: E501
+        "source": "source",  # noqa: E501
         "mode": "mode",  # noqa: E501
         "partition": "partition",  # noqa: E501
-        "source": "source",  # noqa: E501
     }
 
     read_only_vars = {}
@@ -113,8 +113,12 @@ class CocoConfig(ModelNormal):
 
     @classmethod
     @convert_js_args_to_python_args
-    def _from_openapi_data(cls, *args, **kwargs):  # noqa: E501
+    def _from_openapi_data(cls, dataset_name, source, *args, **kwargs):  # noqa: E501
         """CocoConfig - a model defined in OpenAPI
+
+        Args:
+            dataset_name (str): the name of the dataset to be created
+            source ([CocoSource]):
 
         Keyword Args:
             _check_type (bool): if True, values for parameters in openapi_types
@@ -147,10 +151,8 @@ class CocoConfig(ModelNormal):
                                 Animal class but this time we won't travel
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
-            dataset_name (str): the name of the dataset to be created. [optional]  # noqa: E501
             mode (str): append or overwrite if dataset already exists. [optional]  # noqa: E501
             partition ([str]): which field(s) to partition the dataset on. [optional]  # noqa: E501
-            source ([CocoSource]): [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
@@ -179,6 +181,8 @@ class CocoConfig(ModelNormal):
         self._configuration = _configuration
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
+        self.dataset_name = dataset_name
+        self.source = source
         for var_name, var_value in kwargs.items():
             if (
                 var_name not in self.attribute_map
@@ -203,8 +207,12 @@ class CocoConfig(ModelNormal):
     )
 
     @convert_js_args_to_python_args
-    def __init__(self, *args, **kwargs):  # noqa: E501
+    def __init__(self, dataset_name, source, *args, **kwargs):  # noqa: E501
         """CocoConfig - a model defined in OpenAPI
+
+        Args:
+            dataset_name (str): the name of the dataset to be created
+            source ([CocoSource]):
 
         Keyword Args:
             _check_type (bool): if True, values for parameters in openapi_types
@@ -237,10 +245,8 @@ class CocoConfig(ModelNormal):
                                 Animal class but this time we won't travel
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
-            dataset_name (str): the name of the dataset to be created. [optional]  # noqa: E501
             mode (str): append or overwrite if dataset already exists. [optional]  # noqa: E501
             partition ([str]): which field(s) to partition the dataset on. [optional]  # noqa: E501
-            source ([CocoSource]): [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
@@ -267,6 +273,8 @@ class CocoConfig(ModelNormal):
         self._configuration = _configuration
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
+        self.dataset_name = dataset_name
+        self.source = source
         for var_name, var_value in kwargs.items():
             if (
                 var_name not in self.attribute_map

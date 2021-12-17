@@ -13,11 +13,11 @@ import sys  # noqa: F401
 
 from eto.internal.api_client import ApiClient
 from eto.internal.api_client import Endpoint as _Endpoint
-from eto.internal.model.dataset import Dataset
+from eto.internal.model.dataset_details import DatasetDetails
 from eto.internal.model.inline_response200 import InlineResponse200
 from eto.internal.model.inline_response404 import InlineResponse404
-from eto.internal.model_utils import check_allowed_values  # noqa: F401
-from eto.internal.model_utils import (check_validations, date, datetime,
+from eto.internal.model_utils import (check_allowed_values,  # noqa: F401
+                                      check_validations, date, datetime,
                                       file_type, none_type,
                                       validate_and_convert_types)
 
@@ -35,7 +35,7 @@ class DatasetsApi(object):
         self.api_client = api_client
         self.get_dataset_endpoint = _Endpoint(
             settings={
-                "response_type": (Dataset,),
+                "response_type": (DatasetDetails,),
                 "auth": [],
                 "endpoint_path": "/api/v1/projects/{project_id}/datasets/{dataset_id}",
                 "operation_id": "get_dataset",
@@ -154,7 +154,7 @@ class DatasetsApi(object):
             async_req (bool): execute request asynchronously
 
         Returns:
-            Dataset
+            DatasetDetails
                 If the method is called asynchronously, returns the request
                 thread.
         """

@@ -16,8 +16,8 @@ from eto.internal.api_client import Endpoint as _Endpoint
 from eto.internal.model.create_job_request import CreateJobRequest
 from eto.internal.model.inline_response2001 import InlineResponse2001
 from eto.internal.model.job import Job
-from eto.internal.model_utils import check_allowed_values  # noqa: F401
-from eto.internal.model_utils import (check_validations, date, datetime,
+from eto.internal.model_utils import (check_allowed_values,  # noqa: F401
+                                      check_validations, date, datetime,
                                       file_type, none_type,
                                       validate_and_convert_types)
 

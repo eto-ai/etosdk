@@ -12,8 +12,8 @@ import re  # noqa: F401
 import sys  # noqa: F401
 
 from eto.internal.exceptions import ApiAttributeError
-from eto.internal.model_utils import ApiTypeError  # noqa: F401
-from eto.internal.model_utils import (ModelComposed, ModelNormal, ModelSimple,
+from eto.internal.model_utils import (ApiTypeError,  # noqa: F401
+                                      ModelComposed, ModelNormal, ModelSimple,
                                       cached_property,
                                       change_keys_js_to_python,
                                       convert_js_args_to_python_args, date,
@@ -83,10 +83,9 @@ class Dataset(ModelNormal):
         """
         return {
             "dataset_id": (str,),  # noqa: E501
+            "project_id": (str,),  # noqa: E501
             "uri": (str,),  # noqa: E501
             "created_at": (str,),  # noqa: E501
-            "project_id": (str,),  # noqa: E501
-            "schema": (str,),  # noqa: E501
         }
 
     @cached_property
@@ -95,10 +94,9 @@ class Dataset(ModelNormal):
 
     attribute_map = {
         "dataset_id": "dataset_id",  # noqa: E501
+        "project_id": "project_id",  # noqa: E501
         "uri": "uri",  # noqa: E501
         "created_at": "created_at",  # noqa: E501
-        "project_id": "project_id",  # noqa: E501
-        "schema": "schema",  # noqa: E501
     }
 
     read_only_vars = {}
@@ -107,11 +105,14 @@ class Dataset(ModelNormal):
 
     @classmethod
     @convert_js_args_to_python_args
-    def _from_openapi_data(cls, dataset_id, uri, *args, **kwargs):  # noqa: E501
+    def _from_openapi_data(
+        cls, dataset_id, project_id, uri, *args, **kwargs
+    ):  # noqa: E501
         """Dataset - a model defined in OpenAPI
 
         Args:
             dataset_id (str):
+            project_id (str): the namespace where the dataset is in.
             uri (str):
 
         Keyword Args:
@@ -146,8 +147,6 @@ class Dataset(ModelNormal):
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
             created_at (str): ISO format of datetime. [optional]  # noqa: E501
-            project_id (str): the namespace where the dataset is in.. [optional]  # noqa: E501
-            schema (str): [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
@@ -177,6 +176,7 @@ class Dataset(ModelNormal):
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
         self.dataset_id = dataset_id
+        self.project_id = project_id
         self.uri = uri
         for var_name, var_value in kwargs.items():
             if (
@@ -202,11 +202,12 @@ class Dataset(ModelNormal):
     )
 
     @convert_js_args_to_python_args
-    def __init__(self, dataset_id, uri, *args, **kwargs):  # noqa: E501
+    def __init__(self, dataset_id, project_id, uri, *args, **kwargs):  # noqa: E501
         """Dataset - a model defined in OpenAPI
 
         Args:
             dataset_id (str):
+            project_id (str): the namespace where the dataset is in.
             uri (str):
 
         Keyword Args:
@@ -241,8 +242,6 @@ class Dataset(ModelNormal):
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
             created_at (str): ISO format of datetime. [optional]  # noqa: E501
-            project_id (str): the namespace where the dataset is in.. [optional]  # noqa: E501
-            schema (str): [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
@@ -270,6 +269,7 @@ class Dataset(ModelNormal):
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
         self.dataset_id = dataset_id
+        self.project_id = project_id
         self.uri = uri
         for var_name, var_value in kwargs.items():
             if (
