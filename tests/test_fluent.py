@@ -36,26 +36,26 @@ def test_list_datasets():
     datasets = eto.list_datasets()
     assert len(datasets) == 1
     assert datasets[0]["project_id"] == "default"
-    assert datasets[0]["dataset_id"] == "coco"
+    assert datasets[0]["dataset_id"] == "little_coco"
 
 
 def test_get_dataset():
     eto.configure()
-    d = eto.get_dataset("coco")
+    d = eto.get_dataset("little_coco")
     assert d["project_id"] == "default"
-    assert d["dataset_id"] == "coco"
-    assert d["uri"] == "s3a://eto-public/datasets/coco"
+    assert d["dataset_id"] == "little_coco"
+    assert d["uri"].endswith('little_coco')
 
 
 def test_pandas_reader():
     eto.configure()
-    df = pd.read_eto("coco", limit=10)
+    df = pd.read_eto("little_coco", limit=10)
     assert len(df) == 10
 
 
 def test_rikai_resolver():
     eto.configure()
-    loader = DataLoader("coco")
+    loader = DataLoader("little_coco")
     next(loader.__iter__())
 
 

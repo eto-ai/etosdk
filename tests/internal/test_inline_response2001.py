@@ -13,8 +13,7 @@ import unittest
 
 import eto.internal
 from eto.internal.model.job import Job
-
-globals()["Job"] = Job
+globals()['Job'] = Job
 from eto.internal.model.inline_response2001 import InlineResponse2001
 
 
@@ -34,5 +33,5 @@ class TestInlineResponse2001(unittest.TestCase):
         pass
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
