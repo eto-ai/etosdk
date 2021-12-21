@@ -1,8 +1,10 @@
+import logging
 from typing import Iterable, Optional, Union
 from urllib.parse import urlparse
 
 import pandas as pd
 from rikai.io import _normalize_uri
+from rikai.logging import logger
 from rikai.parquet.dataset import Dataset as RikaiDataset
 
 from eto.config import Config
@@ -11,7 +13,7 @@ from eto.internal.api.jobs_api import JobsApi
 from eto.internal.api_client import ApiClient
 from eto.internal.apis import DatasetsApi
 from eto.internal.configuration import Configuration
-from eto.internal.model.dataset import Dataset
+from eto.internal.model.dataset_details import DatasetDetails
 from eto.internal.model.job import Job
 from eto.resolver import register_resolver
 from eto.util import get_dataset_ref_parts
@@ -56,7 +58,7 @@ def _create_api(api_name, client):
     return api(client)
 
 
-def list_datasets(project="default") -> list[Dataset]:
+def list_datasets(project="default") -> pd.DataFrame:
     """Lists existing datasets (dataset_id, uri, and other metadata)
 
     Parameters
@@ -65,10 +67,11 @@ def list_datasets(project="default") -> list[Dataset]:
         List all datasets in a particular project.
         If omitted just lists datasets in 'default'
     """
-    return _get_api("datasets").list_datasets(project)["datasets"]
+    datasets = _get_api("datasets").list_datasets(project)["datasets"]
+    return pd.DataFrame([x.to_dict() for x in datasets])
 
 
-def get_dataset(dataset_name: str) -> Dataset:
+def get_dataset(dataset_name: str) -> pd.Series:
     """Retrieve metadata for a given dataset
 
     Parameters
@@ -127,6 +130,11 @@ def ingest_coco(
     return conn.ingest()
 
 
+def list_jobs(project_id: str = "default", page_size: int = 20, page_token: int = 0):
+    jobs = _get_api("jobs")
+    return jobs.list_ingest_job(project_id, page_size=page_size, page_token=page_token)
+
+
 def init():
     # monkey patch pandas
     def read_eto(dataset_name: str, limit: int = None) -> pd.DataFrame:
@@ -159,14 +167,39 @@ def init():
     # register Rikai resolver
     register_resolver()
 
+    # Suppress Rikai info output
+    logger.setLevel(logging.WARNING)
 
-def _get_account_url(account):
-    return f"https://{account}.eto.ai"
+    # update the to_str method in DatasetDetails for better schema display
+    def to_str(self):
+        return "DatasetDetails:\n" + pd.Series(self.to_dict()).to_string(dtype=False)
+
+    DatasetDetails.to_str = to_str
+
+    def _repr_html_(self):
+        fields = pd.Series(self.to_dict())
+        headers = fields[["project_id", "dataset_id", "uri", "created_at"]].to_string(
+            dtype=False
+        )
+        schema = pd.DataFrame(self.schema["fields"])[["name", "type"]]
+        return f"<pre>{headers}\nSchema</pre>" + schema._repr_html_()
+
+    DatasetDetails._repr_html_ = _repr_html_
+
+
+def _get_account_url(account, use_ssl, port):
+    scheme = "https" if use_ssl else "http"
+    url = f"{scheme}://{account}.eto.ai"
+    if port is not None:
+        url = url + f":{port}"
+    return url
 
 
 def configure(
     account: Optional[str] = None,
     token: Optional[str] = None,
+    use_ssl: bool = True,
+    port: Optional[int] = None,
 ):
     """One time setup to configure the SDK to connect to Eto API
 
@@ -177,10 +210,14 @@ def configure(
     token: str, default None
         the api token. If omitted then will default to ETO_API_TOKEN
         environment variable
+    use_ssl: bool, default True
+        Whether to use an SSL-enabled connection
+    port: int, default None
+        Optional custom port to connect on
     """
     url = None
     if account is not None:
-        url = _get_account_url(account)
+        url = _get_account_url(account, use_ssl, port)
     url = url or Config.ETO_HOST_URL
     token = token or Config.ETO_API_TOKEN
     if url is None:

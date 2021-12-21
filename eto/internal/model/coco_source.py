@@ -11,23 +11,22 @@
 import re  # noqa: F401
 import sys  # noqa: F401
 
+from eto.internal.exceptions import ApiAttributeError
 from eto.internal.model_utils import (  # noqa: F401
     ApiTypeError,
-    ModelComposed,
-    ModelNormal,
-    ModelSimple,
     cached_property,
     change_keys_js_to_python,
     convert_js_args_to_python_args,
     date,
     datetime,
     file_type,
+    ModelComposed,
+    ModelNormal,
+    ModelSimple,
     none_type,
+    OpenApiModel,
     validate_get_composed_info,
 )
-from ..model_utils import OpenApiModel
-from eto.internal.exceptions import ApiAttributeError
-
 
 
 class CocoSource(ModelNormal):
@@ -54,11 +53,9 @@ class CocoSource(ModelNormal):
           as additional properties values.
     """
 
-    allowed_values = {
-    }
+    allowed_values = {}
 
-    validations = {
-    }
+    validations = {}
 
     @cached_property
     def additional_properties_type():
@@ -66,7 +63,17 @@ class CocoSource(ModelNormal):
         This must be a method because a model may have properties that are
         of type self, this must run after the class is loaded
         """
-        return (bool, date, datetime, dict, float, int, list, str, none_type,)  # noqa: E501
+        return (
+            bool,
+            date,
+            datetime,
+            dict,
+            float,
+            int,
+            list,
+            str,
+            none_type,
+        )  # noqa: E501
 
     _nullable = False
 
@@ -81,24 +88,32 @@ class CocoSource(ModelNormal):
                 and the value is attribute type.
         """
         return {
-            'image_dir': (str,),  # noqa: E501
-            'annotation': (str,),  # noqa: E501
-            'extras': (bool, date, datetime, dict, float, int, list, str, none_type,),  # noqa: E501
+            "image_dir": (str,),  # noqa: E501
+            "annotation": (str,),  # noqa: E501
+            "extras": (
+                bool,
+                date,
+                datetime,
+                dict,
+                float,
+                int,
+                list,
+                str,
+                none_type,
+            ),  # noqa: E501
         }
 
     @cached_property
     def discriminator():
         return None
 
-
     attribute_map = {
-        'image_dir': 'image_dir',  # noqa: E501
-        'annotation': 'annotation',  # noqa: E501
-        'extras': 'extras',  # noqa: E501
+        "image_dir": "image_dir",  # noqa: E501
+        "annotation": "annotation",  # noqa: E501
+        "extras": "extras",  # noqa: E501
     }
 
-    read_only_vars = {
-    }
+    read_only_vars = {}
 
     _composed_schemas = {}
 
@@ -145,17 +160,18 @@ class CocoSource(ModelNormal):
             extras (bool, date, datetime, dict, float, int, list, str, none_type): [optional]  # noqa: E501
         """
 
-        _check_type = kwargs.pop('_check_type', True)
-        _spec_property_naming = kwargs.pop('_spec_property_naming', False)
-        _path_to_item = kwargs.pop('_path_to_item', ())
-        _configuration = kwargs.pop('_configuration', None)
-        _visited_composed_classes = kwargs.pop('_visited_composed_classes', ())
+        _check_type = kwargs.pop("_check_type", True)
+        _spec_property_naming = kwargs.pop("_spec_property_naming", False)
+        _path_to_item = kwargs.pop("_path_to_item", ())
+        _configuration = kwargs.pop("_configuration", None)
+        _visited_composed_classes = kwargs.pop("_visited_composed_classes", ())
 
         self = super(OpenApiModel, cls).__new__(cls)
 
         if args:
             raise ApiTypeError(
-                "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments." % (
+                "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments."
+                % (
                     args,
                     self.__class__.__name__,
                 ),
@@ -172,23 +188,27 @@ class CocoSource(ModelNormal):
 
         self.image_dir = image_dir
         for var_name, var_value in kwargs.items():
-            if var_name not in self.attribute_map and \
-                        self._configuration is not None and \
-                        self._configuration.discard_unknown_keys and \
-                        self.additional_properties_type is None:
+            if (
+                var_name not in self.attribute_map
+                and self._configuration is not None
+                and self._configuration.discard_unknown_keys
+                and self.additional_properties_type is None
+            ):
                 # discard variable.
                 continue
             setattr(self, var_name, var_value)
         return self
 
-    required_properties = set([
-        '_data_store',
-        '_check_type',
-        '_spec_property_naming',
-        '_path_to_item',
-        '_configuration',
-        '_visited_composed_classes',
-    ])
+    required_properties = set(
+        [
+            "_data_store",
+            "_check_type",
+            "_spec_property_naming",
+            "_path_to_item",
+            "_configuration",
+            "_visited_composed_classes",
+        ]
+    )
 
     @convert_js_args_to_python_args
     def __init__(self, image_dir, *args, **kwargs):  # noqa: E501
@@ -232,15 +252,16 @@ class CocoSource(ModelNormal):
             extras (bool, date, datetime, dict, float, int, list, str, none_type): [optional]  # noqa: E501
         """
 
-        _check_type = kwargs.pop('_check_type', True)
-        _spec_property_naming = kwargs.pop('_spec_property_naming', False)
-        _path_to_item = kwargs.pop('_path_to_item', ())
-        _configuration = kwargs.pop('_configuration', None)
-        _visited_composed_classes = kwargs.pop('_visited_composed_classes', ())
+        _check_type = kwargs.pop("_check_type", True)
+        _spec_property_naming = kwargs.pop("_spec_property_naming", False)
+        _path_to_item = kwargs.pop("_path_to_item", ())
+        _configuration = kwargs.pop("_configuration", None)
+        _visited_composed_classes = kwargs.pop("_visited_composed_classes", ())
 
         if args:
             raise ApiTypeError(
-                "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments." % (
+                "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments."
+                % (
                     args,
                     self.__class__.__name__,
                 ),
@@ -257,13 +278,17 @@ class CocoSource(ModelNormal):
 
         self.image_dir = image_dir
         for var_name, var_value in kwargs.items():
-            if var_name not in self.attribute_map and \
-                        self._configuration is not None and \
-                        self._configuration.discard_unknown_keys and \
-                        self.additional_properties_type is None:
+            if (
+                var_name not in self.attribute_map
+                and self._configuration is not None
+                and self._configuration.discard_unknown_keys
+                and self.additional_properties_type is None
+            ):
                 # discard variable.
                 continue
             setattr(self, var_name, var_value)
             if var_name in self.read_only_vars:
-                raise ApiAttributeError(f"`{var_name}` is a read-only attribute. Use `from_openapi_data` to instantiate "
-                                     f"class with read only attributes.")
+                raise ApiAttributeError(
+                    f"`{var_name}` is a read-only attribute. Use `from_openapi_data` to instantiate "
+                    f"class with read only attributes."
+                )

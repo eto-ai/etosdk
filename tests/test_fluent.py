@@ -44,7 +44,7 @@ def test_get_dataset():
     d = eto.get_dataset("little_coco")
     assert d["project_id"] == "default"
     assert d["dataset_id"] == "little_coco"
-    assert d["uri"].endswith('little_coco')
+    assert d["uri"].endswith("little_coco")
 
 
 def test_pandas_reader():

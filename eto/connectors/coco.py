@@ -26,7 +26,7 @@ class CocoConnector(Connector):
         kwargs = {}
         if self.partition is not None:
             kwargs = {
-                'partition': [self.partition]
+                "partition": [self.partition]
                 if isinstance(self.partition, str)
                 else self.partition
             }
@@ -35,6 +35,6 @@ class CocoConnector(Connector):
             dataset_name=f"{self.project_id}.{self.dataset_id}",
             source=self._sources,
             mode=self.mode,
-            **kwargs
+            **kwargs,
         )
         return CreateJobRequest(connector=self.connector_type, config=config)

@@ -13,7 +13,8 @@ import unittest
 
 import eto.internal
 from eto.internal.model.coco_source import CocoSource
-globals()['CocoSource'] = CocoSource
+
+globals()["CocoSource"] = CocoSource
 from eto.internal.model.coco_config import CocoConfig
 
 
@@ -33,5 +34,5 @@ class TestCocoConfig(unittest.TestCase):
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

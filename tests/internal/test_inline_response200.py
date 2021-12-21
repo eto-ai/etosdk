@@ -13,7 +13,8 @@ import unittest
 
 import eto.internal
 from eto.internal.model.dataset import Dataset
-globals()['Dataset'] = Dataset
+
+globals()["Dataset"] = Dataset
 from eto.internal.model.inline_response200 import InlineResponse200
 
 
@@ -33,5 +34,5 @@ class TestInlineResponse200(unittest.TestCase):
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

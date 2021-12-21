@@ -11,7 +11,11 @@
 import re  # noqa: F401
 import sys  # noqa: F401
 
-from eto.internal.api_client import ApiClient, Endpoint as _Endpoint
+from eto.internal.api_client import ApiClient
+from eto.internal.api_client import Endpoint as _Endpoint
+from eto.internal.model.dataset_details import DatasetDetails
+from eto.internal.model.inline_response200 import InlineResponse200
+from eto.internal.model.inline_response404 import InlineResponse404
 from eto.internal.model_utils import (  # noqa: F401
     check_allowed_values,
     check_validations,
@@ -19,11 +23,8 @@ from eto.internal.model_utils import (  # noqa: F401
     datetime,
     file_type,
     none_type,
-    validate_and_convert_types
+    validate_and_convert_types,
 )
-from eto.internal.model.dataset_details import DatasetDetails
-from eto.internal.model.inline_response200 import InlineResponse200
-from eto.internal.model.inline_response404 import InlineResponse404
 
 
 class DatasetsApi(object):
@@ -39,115 +40,91 @@ class DatasetsApi(object):
         self.api_client = api_client
         self.get_dataset_endpoint = _Endpoint(
             settings={
-                'response_type': (DatasetDetails,),
-                'auth': [],
-                'endpoint_path': '/api/v1/projects/{project_id}/datasets/{dataset_id}',
-                'operation_id': 'get_dataset',
-                'http_method': 'GET',
-                'servers': None,
+                "response_type": (DatasetDetails,),
+                "auth": [],
+                "endpoint_path": "/api/v1/projects/{project_id}/datasets/{dataset_id}",
+                "operation_id": "get_dataset",
+                "http_method": "GET",
+                "servers": None,
             },
             params_map={
-                'all': [
-                    'project_id',
-                    'dataset_id',
+                "all": [
+                    "project_id",
+                    "dataset_id",
                 ],
-                'required': [
-                    'project_id',
-                    'dataset_id',
+                "required": [
+                    "project_id",
+                    "dataset_id",
                 ],
-                'nullable': [
-                ],
-                'enum': [
-                ],
-                'validation': [
-                ]
+                "nullable": [],
+                "enum": [],
+                "validation": [],
             },
             root_map={
-                'validations': {
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "project_id": (str,),
+                    "dataset_id": (str,),
                 },
-                'allowed_values': {
+                "attribute_map": {
+                    "project_id": "project_id",
+                    "dataset_id": "dataset_id",
                 },
-                'openapi_types': {
-                    'project_id':
-                        (str,),
-                    'dataset_id':
-                        (str,),
+                "location_map": {
+                    "project_id": "path",
+                    "dataset_id": "path",
                 },
-                'attribute_map': {
-                    'project_id': 'project_id',
-                    'dataset_id': 'dataset_id',
-                },
-                'location_map': {
-                    'project_id': 'path',
-                    'dataset_id': 'path',
-                },
-                'collection_format_map': {
-                }
+                "collection_format_map": {},
             },
             headers_map={
-                'accept': [
-                    '*/*'
-                ],
-                'content_type': [],
+                "accept": ["*/*"],
+                "content_type": [],
             },
-            api_client=api_client
+            api_client=api_client,
         )
         self.list_datasets_endpoint = _Endpoint(
             settings={
-                'response_type': (InlineResponse200,),
-                'auth': [],
-                'endpoint_path': '/api/v1/projects/{project_id}/datasets',
-                'operation_id': 'list_datasets',
-                'http_method': 'GET',
-                'servers': None,
+                "response_type": (InlineResponse200,),
+                "auth": [],
+                "endpoint_path": "/api/v1/projects/{project_id}/datasets",
+                "operation_id": "list_datasets",
+                "http_method": "GET",
+                "servers": None,
             },
             params_map={
-                'all': [
-                    'project_id',
+                "all": [
+                    "project_id",
                 ],
-                'required': [
-                    'project_id',
+                "required": [
+                    "project_id",
                 ],
-                'nullable': [
-                ],
-                'enum': [
-                ],
-                'validation': [
-                ]
+                "nullable": [],
+                "enum": [],
+                "validation": [],
             },
             root_map={
-                'validations': {
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "project_id": (str,),
                 },
-                'allowed_values': {
+                "attribute_map": {
+                    "project_id": "project_id",
                 },
-                'openapi_types': {
-                    'project_id':
-                        (str,),
+                "location_map": {
+                    "project_id": "path",
                 },
-                'attribute_map': {
-                    'project_id': 'project_id',
-                },
-                'location_map': {
-                    'project_id': 'path',
-                },
-                'collection_format_map': {
-                }
+                "collection_format_map": {},
             },
             headers_map={
-                'accept': [
-                    '*/*'
-                ],
-                'content_type': [],
+                "accept": ["*/*"],
+                "content_type": [],
             },
-            api_client=api_client
+            api_client=api_client,
         )
 
-    def get_dataset(
-        self,
-        project_id,
-        dataset_id,
-        **kwargs
-    ):
+    def get_dataset(self, project_id, dataset_id, **kwargs):
         """Get dataset details  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
@@ -176,6 +153,9 @@ class DatasetsApi(object):
             _check_return_type (bool): specifies if type checking
                 should be done one the data received from the server.
                 Default is True.
+            _content_type (str/None): force body content-type.
+                Default is None and content-type will be predicted by allowed
+                content-types and body.
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
@@ -186,36 +166,19 @@ class DatasetsApi(object):
                 If the method is called asynchronously, returns the request
                 thread.
         """
-        kwargs['async_req'] = kwargs.get(
-            'async_req', False
-        )
-        kwargs['_return_http_data_only'] = kwargs.get(
-            '_return_http_data_only', True
-        )
-        kwargs['_preload_content'] = kwargs.get(
-            '_preload_content', True
-        )
-        kwargs['_request_timeout'] = kwargs.get(
-            '_request_timeout', None
-        )
-        kwargs['_check_input_type'] = kwargs.get(
-            '_check_input_type', True
-        )
-        kwargs['_check_return_type'] = kwargs.get(
-            '_check_return_type', True
-        )
-        kwargs['_host_index'] = kwargs.get('_host_index')
-        kwargs['project_id'] = \
-            project_id
-        kwargs['dataset_id'] = \
-            dataset_id
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_content_type"] = kwargs.get("_content_type")
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["project_id"] = project_id
+        kwargs["dataset_id"] = dataset_id
         return self.get_dataset_endpoint.call_with_http_info(**kwargs)
 
-    def list_datasets(
-        self,
-        project_id,
-        **kwargs
-    ):
+    def list_datasets(self, project_id, **kwargs):
         """Show all datasets.  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
@@ -243,6 +206,9 @@ class DatasetsApi(object):
             _check_return_type (bool): specifies if type checking
                 should be done one the data received from the server.
                 Default is True.
+            _content_type (str/None): force body content-type.
+                Default is None and content-type will be predicted by allowed
+                content-types and body.
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
@@ -253,26 +219,13 @@ class DatasetsApi(object):
                 If the method is called asynchronously, returns the request
                 thread.
         """
-        kwargs['async_req'] = kwargs.get(
-            'async_req', False
-        )
-        kwargs['_return_http_data_only'] = kwargs.get(
-            '_return_http_data_only', True
-        )
-        kwargs['_preload_content'] = kwargs.get(
-            '_preload_content', True
-        )
-        kwargs['_request_timeout'] = kwargs.get(
-            '_request_timeout', None
-        )
-        kwargs['_check_input_type'] = kwargs.get(
-            '_check_input_type', True
-        )
-        kwargs['_check_return_type'] = kwargs.get(
-            '_check_return_type', True
-        )
-        kwargs['_host_index'] = kwargs.get('_host_index')
-        kwargs['project_id'] = \
-            project_id
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_content_type"] = kwargs.get("_content_type")
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["project_id"] = project_id
         return self.list_datasets_endpoint.call_with_http_info(**kwargs)
-
