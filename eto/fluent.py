@@ -132,7 +132,7 @@ def ingest_coco(
 
 def list_jobs(project_id: str = "default", page_size: int = 20, page_token: int = 0):
     jobs = _get_api("jobs")
-    return jobs.list_ingest_job(project_id, page_size=page_size, page_token=page_token)
+    return jobs.list_ingest_jobs(project_id, page_size=page_size, page_token=page_token)
 
 
 def init():
