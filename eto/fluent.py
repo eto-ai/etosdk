@@ -133,9 +133,9 @@ def ingest_coco(
     return conn.ingest()
 
 
-def list_jobs(project_id: str = "default",
-              _page_size: int = 100,
-              _start_page_token: int = 0) -> pd.DataFrame:
+def list_jobs(
+    project_id: str = "default", _page_size: int = 50, _start_page_token: int = 0
+) -> pd.DataFrame:
     """List all jobs for a given project
 
     Parameters
@@ -145,14 +145,17 @@ def list_jobs(project_id: str = "default",
     """
     jobs = _get_api("jobs")
     frames = []
-    page = jobs.list_ingest_jobs(project_id, page_size=_page_size,
-                                 page_token=_start_page_token)
-    while len(page['jobs']) > 0:
-        frames.append(pd.DataFrame([j.to_dict() for j in page['jobs']]))
-        page = jobs.list_ingest_jobs(project_id, page_size=_page_size,
-                                     page_token=page['next_page_token'])
-    return (pd.concat(frames, ignore_index=True)
-            .drop_duplicates(['id'], ignore_index=True))
+    page = jobs.list_ingest_jobs(
+        project_id, page_size=_page_size, page_token=_start_page_token
+    )
+    while len(page["jobs"]) > 0:
+        frames.append(pd.DataFrame([j.to_dict() for j in page["jobs"]]))
+        page = jobs.list_ingest_jobs(
+            project_id, page_size=_page_size, page_token=page["next_page_token"]
+        )
+    return pd.concat(frames, ignore_index=True).drop_duplicates(
+        ["id"], ignore_index=True
+    )
 
 
 def get_job_info(job_id: str, project_id: str = "default") -> Job:
@@ -199,6 +202,7 @@ def init():
     # update the to_str method in DatasetDetails for better schema display
     def to_str(self):
         return "DatasetDetails:\n" + pd.Series(self.to_dict()).to_string(dtype=False)
+
     DatasetDetails.to_str = to_str
 
     def _repr_html_(self):
@@ -208,11 +212,13 @@ def init():
         )
         schema = pd.DataFrame(self.schema["fields"])[["name", "type"]]
         return f"<pre>{headers}\nSchema</pre>" + schema._repr_html_()
+
     DatasetDetails._repr_html_ = _repr_html_
 
     def check_status(self):
         """Call the Eto API to check for the latest job status"""
         return get_job_info(self.id, self.project_id).status
+
     Job.check_status = check_status
 
     def wait(self, max_seconds: int = -1, poke_interval: int = 10) -> str:
@@ -226,16 +232,18 @@ def init():
           Interval between checks in seconds
         """
         status = self.status
-        sleep_sec = (poke_interval if max_seconds < 0
-                     else min(poke_interval, max_seconds))
+        sleep_sec = (
+            poke_interval if max_seconds < 0 else min(poke_interval, max_seconds)
+        )
         elapsed = 0
-        while status not in ('failed', 'success'):
+        while status not in ("failed", "success"):
             time.sleep(sleep_sec)
             status = self.check_status()
             elapsed += poke_interval
             if 0 <= max_seconds < elapsed:
                 break
         return status
+
     Job.wait = wait
 
 

@@ -35,8 +35,8 @@ def test_list_datasets():
     eto.configure()
     datasets = eto.list_datasets()
     assert len(datasets) == 1
-    assert datasets[0].project_id == "default"
-    assert datasets[0].dataset_id == "little_coco"
+    assert datasets.iloc[0].project_id == "default"
+    assert datasets.iloc[0].dataset_id == "little_coco"
 
 
 def test_get_dataset():
@@ -68,12 +68,12 @@ def test_ingest_coco():
             "annotation": "s3://annotations",
             "extras": {"foo": "bar"},
         },
-        partition="split"
+        partition="split",
     )
     assert job.id is not None
-    assert job.check_status() in ('created', 'scheduled', 'running')
-    jobs = eto.list_jobs('default')
+    assert job.check_status() in ("created", "scheduled", "running")
+    jobs = eto.list_jobs("default")
     assert len(jobs) > 0
-    assert job.id in set([x.id for x in jobs])
-    assert all([j.project_id == 'default' for j in jobs])
+    assert job.id in set([row.id for _, row in jobs.iterrows()])
+    assert all([row.project_id == "default" for _, row in jobs.iterrows()])
     job.wait(1)
