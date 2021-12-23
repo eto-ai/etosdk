@@ -16,10 +16,15 @@ from eto.internal.api_client import Endpoint as _Endpoint
 from eto.internal.model.create_job_request import CreateJobRequest
 from eto.internal.model.inline_response2001 import InlineResponse2001
 from eto.internal.model.job import Job
-from eto.internal.model_utils import check_allowed_values  # noqa: F401
-from eto.internal.model_utils import (check_validations, date, datetime,
-                                      file_type, none_type,
-                                      validate_and_convert_types)
+from eto.internal.model_utils import (  # noqa: F401
+    check_allowed_values,
+    check_validations,
+    date,
+    datetime,
+    file_type,
+    none_type,
+    validate_and_convert_types,
+)
 
 
 class JobsApi(object):
@@ -122,12 +127,12 @@ class JobsApi(object):
             },
             api_client=api_client,
         )
-        self.list_ingest_job_endpoint = _Endpoint(
+        self.list_ingest_jobs_endpoint = _Endpoint(
             settings={
                 "response_type": (InlineResponse2001,),
                 "auth": [],
                 "endpoint_path": "/api/v1/projects/{project_id}/ingest",
-                "operation_id": "list_ingest_job",
+                "operation_id": "list_ingest_jobs",
                 "http_method": "GET",
                 "servers": None,
             },
@@ -149,8 +154,8 @@ class JobsApi(object):
                 "allowed_values": {},
                 "openapi_types": {
                     "project_id": (str,),
-                    "page_size": (float,),
-                    "page_token": (float,),
+                    "page_size": (int,),
+                    "page_token": (int,),
                 },
                 "attribute_map": {
                     "project_id": "project_id",
@@ -200,6 +205,9 @@ class JobsApi(object):
             _check_return_type (bool): specifies if type checking
                 should be done one the data received from the server.
                 Default is True.
+            _content_type (str/None): force body content-type.
+                Default is None and content-type will be predicted by allowed
+                content-types and body.
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
@@ -216,6 +224,7 @@ class JobsApi(object):
         kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
         kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
         kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
         kwargs["project_id"] = project_id
         kwargs["body"] = body
@@ -250,6 +259,9 @@ class JobsApi(object):
             _check_return_type (bool): specifies if type checking
                 should be done one the data received from the server.
                 Default is True.
+            _content_type (str/None): force body content-type.
+                Default is None and content-type will be predicted by allowed
+                content-types and body.
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
@@ -266,26 +278,27 @@ class JobsApi(object):
         kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
         kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
         kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
         kwargs["project_id"] = project_id
         kwargs["job_id"] = job_id
         return self.get_ingest_job_endpoint.call_with_http_info(**kwargs)
 
-    def list_ingest_job(self, project_id, **kwargs):
+    def list_ingest_jobs(self, project_id, **kwargs):
         """List all dataset ingestion jobs  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.list_ingest_job(project_id, async_req=True)
+        >>> thread = api.list_ingest_jobs(project_id, async_req=True)
         >>> result = thread.get()
 
         Args:
             project_id (str):
 
         Keyword Args:
-            page_size (float): [optional]
-            page_token (float): [optional]
+            page_size (int): [optional]
+            page_token (int): [optional]
             _return_http_data_only (bool): response data without head status
                 code and headers. Default is True.
             _preload_content (bool): if False, the urllib3.HTTPResponse object
@@ -301,6 +314,9 @@ class JobsApi(object):
             _check_return_type (bool): specifies if type checking
                 should be done one the data received from the server.
                 Default is True.
+            _content_type (str/None): force body content-type.
+                Default is None and content-type will be predicted by allowed
+                content-types and body.
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
@@ -317,6 +333,7 @@ class JobsApi(object):
         kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
         kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
         kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
         kwargs["project_id"] = project_id
-        return self.list_ingest_job_endpoint.call_with_http_info(**kwargs)
+        return self.list_ingest_jobs_endpoint.call_with_http_info(**kwargs)

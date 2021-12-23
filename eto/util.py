@@ -3,6 +3,7 @@ import configparser
 import os
 import pathlib
 from typing import Optional
+from urllib.parse import ParseResult, urlparse
 
 
 class Config:

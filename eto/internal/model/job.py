@@ -12,15 +12,21 @@ import re  # noqa: F401
 import sys  # noqa: F401
 
 from eto.internal.exceptions import ApiAttributeError
-from eto.internal.model_utils import ApiTypeError  # noqa: F401
-from eto.internal.model_utils import (ModelComposed, ModelNormal, ModelSimple,
-                                      cached_property,
-                                      change_keys_js_to_python,
-                                      convert_js_args_to_python_args, date,
-                                      datetime, file_type, none_type,
-                                      validate_get_composed_info)
-
-from ..model_utils import OpenApiModel
+from eto.internal.model_utils import (  # noqa: F401
+    ApiTypeError,
+    cached_property,
+    change_keys_js_to_python,
+    convert_js_args_to_python_args,
+    date,
+    datetime,
+    file_type,
+    ModelComposed,
+    ModelNormal,
+    ModelSimple,
+    none_type,
+    OpenApiModel,
+    validate_get_composed_info,
+)
 
 
 class Job(ModelNormal):
@@ -83,7 +89,8 @@ class Job(ModelNormal):
         """
         return {
             "created_at": (str,),  # noqa: E501
-            "job_id": (str,),  # noqa: E501
+            "id": (str,),  # noqa: E501
+            "project_id": (str,),  # noqa: E501
             "status": (str,),  # noqa: E501
         }
 
@@ -93,7 +100,8 @@ class Job(ModelNormal):
 
     attribute_map = {
         "created_at": "created_at",  # noqa: E501
-        "job_id": "job_id",  # noqa: E501
+        "id": "id",  # noqa: E501
+        "project_id": "project_id",  # noqa: E501
         "status": "status",  # noqa: E501
     }
 
@@ -138,7 +146,8 @@ class Job(ModelNormal):
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
             created_at (str): ISO format of datetime. [optional]  # noqa: E501
-            job_id (str): Job ID, UUID. [optional]  # noqa: E501
+            id (str): Job ID, UUID. [optional]  # noqa: E501
+            project_id (str): Project ID. [optional]  # noqa: E501
             status (str): Job status, i.e., \"created\" or \"failed\". [optional]  # noqa: E501
         """
 
@@ -227,7 +236,8 @@ class Job(ModelNormal):
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
             created_at (str): ISO format of datetime. [optional]  # noqa: E501
-            job_id (str): Job ID, UUID. [optional]  # noqa: E501
+            id (str): Job ID, UUID. [optional]  # noqa: E501
+            project_id (str): Project ID. [optional]  # noqa: E501
             status (str): Job status, i.e., \"created\" or \"failed\". [optional]  # noqa: E501
         """
 

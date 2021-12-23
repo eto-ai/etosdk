@@ -1,7 +1,12 @@
+import logging
+import time
 from typing import Iterable, Optional, Union
 from urllib.parse import urlparse
 
 import pandas as pd
+from rikai.io import _normalize_uri
+from rikai.logging import logger
+from rikai.parquet.dataset import Dataset as RikaiDataset
 
 from eto.config import Config
 from eto.connectors.coco import CocoConnector, CocoSource
@@ -9,16 +14,17 @@ from eto.internal.api.jobs_api import JobsApi
 from eto.internal.api_client import ApiClient
 from eto.internal.apis import DatasetsApi
 from eto.internal.configuration import Configuration
-from eto.internal.model.dataset import Dataset
+from eto.internal.model.dataset_details import DatasetDetails
 from eto.internal.model.job import Job
 from eto.resolver import register_resolver
-from eto.spark import get_session
 from eto.util import get_dataset_ref_parts
 
 __all__ = [
     "list_datasets",
     "get_dataset",
     "ingest_coco",
+    "list_jobs",
+    "get_job_info",
     "CocoSource",
     "init",
     "configure",
@@ -37,7 +43,7 @@ def _get_api(api_name: str):
 def _get_client() -> ApiClient:
     sdk_conf = Config.load()
     url = sdk_conf["url"]
-    if url.endswith('/'):
+    if url.endswith("/"):
         url = url[:-1]
     conf = Configuration(host=url)
     return ApiClient(
@@ -55,7 +61,7 @@ def _create_api(api_name, client):
     return api(client)
 
 
-def list_datasets(project="default") -> list[Dataset]:
+def list_datasets(project="default") -> pd.DataFrame:
     """Lists existing datasets (dataset_id, uri, and other metadata)
 
     Parameters
@@ -64,10 +70,11 @@ def list_datasets(project="default") -> list[Dataset]:
         List all datasets in a particular project.
         If omitted just lists datasets in 'default'
     """
-    return _get_api("datasets").list_datasets(project)["datasets"]
+    datasets = _get_api("datasets").list_datasets(project)["datasets"]
+    return pd.DataFrame([x.to_dict() for x in datasets])
 
 
-def get_dataset(dataset_name: str) -> Dataset:
+def get_dataset(dataset_name: str) -> pd.Series:
     """Retrieve metadata for a given dataset
 
     Parameters
@@ -126,6 +133,36 @@ def ingest_coco(
     return conn.ingest()
 
 
+def list_jobs(
+    project_id: str = "default", _page_size: int = 50, _start_page_token: int = 0
+) -> pd.DataFrame:
+    """List all jobs for a given project
+
+    Parameters
+    ----------
+    project_id: str, default 'default'
+      Show jobs under this project
+    """
+    jobs = _get_api("jobs")
+    frames = []
+    page = jobs.list_ingest_jobs(
+        project_id, page_size=_page_size, page_token=_start_page_token
+    )
+    while len(page["jobs"]) > 0:
+        frames.append(pd.DataFrame([j.to_dict() for j in page["jobs"]]))
+        page = jobs.list_ingest_jobs(
+            project_id, page_size=_page_size, page_token=page["next_page_token"]
+        )
+    return pd.concat(frames, ignore_index=True).drop_duplicates(
+        ["id"], ignore_index=True
+    )
+
+
+def get_job_info(job_id: str, project_id: str = "default") -> Job:
+    jobs = _get_api("jobs")
+    return jobs.get_ingest_job(project_id, job_id)
+
+
 def init():
     # monkey patch pandas
     def read_eto(dataset_name: str, limit: int = None) -> pd.DataFrame:
@@ -136,27 +173,93 @@ def init():
         dataset_name: str
             The name of the dataset to be read
         limit: Optional[int]
-            The max rows to retrieve. If omitted then all rows are retrieved
+            The max rows to retrieve. If omitted or <=0 then all rows are retrieved
         """
-        uri = get_dataset(dataset_name).uri
-        sdf = get_session().read.format("rikai").load(uri)
-        if limit is not None and limit > 0:
-            sdf = sdf.limit(limit)
-        return sdf.toPandas()
+        uri = _normalize_uri(get_dataset(dataset_name).uri)
+        dataset = RikaiDataset(uri)
+        if limit is None or limit <= 0:
+            return pd.DataFrame(dataset)
+        else:
+            rows = [None] * limit
+            i = 0
+            for i, r in enumerate(dataset):
+                rows[i] = r
+                if i == limit - 1:
+                    break
+            if i < limit - 1:
+                rows = rows[: i + 1]
+            return pd.DataFrame(rows)
 
     pd.read_eto = read_eto
 
     # register Rikai resolver
     register_resolver()
 
+    # Suppress Rikai info output
+    logger.setLevel(logging.WARNING)
 
-def _get_account_url(account):
-    return f"https://{account}.eto.ai"
+    # Monkey patch the generated openapi classes
+    # update the to_str method in DatasetDetails for better schema display
+    def to_str(self):
+        return "DatasetDetails:\n" + pd.Series(self.to_dict()).to_string(dtype=False)
+
+    DatasetDetails.to_str = to_str
+
+    def _repr_html_(self):
+        fields = pd.Series(self.to_dict())
+        headers = fields[["project_id", "dataset_id", "uri", "created_at"]].to_string(
+            dtype=False
+        )
+        schema = pd.DataFrame(self.schema["fields"])[["name", "type"]]
+        return f"<pre>{headers}\nSchema</pre>" + schema._repr_html_()
+
+    DatasetDetails._repr_html_ = _repr_html_
+
+    def check_status(self):
+        """Call the Eto API to check for the latest job status"""
+        return get_job_info(self.id, self.project_id).status
+
+    Job.check_status = check_status
+
+    def wait(self, max_seconds: int = -1, poke_interval: int = 10) -> str:
+        """Wait for the job to complete (either failed or success)
+
+        Parameters
+        ----------
+        max_seconds: int, default -1
+          Max number of seconds to wait. If -1 wait forever.
+        poke_interval: int, default 10
+          Interval between checks in seconds
+        """
+        status = self.status
+        sleep_sec = (
+            poke_interval if max_seconds < 0 else min(poke_interval, max_seconds)
+        )
+        elapsed = 0
+        while status not in ("failed", "success"):
+            time.sleep(sleep_sec)
+            status = self.check_status()
+            elapsed += poke_interval
+            if 0 <= max_seconds < elapsed:
+                break
+        return status
+
+    Job.wait = wait
+
+
+def _get_account_url(account, use_ssl, port):
+    scheme = "https" if use_ssl else "http"
+    url = f"{scheme}://{account}.eto.ai"
+    if port is not None:
+        url = url + f":{port}"
+    return url
 
 
 def configure(
     account: Optional[str] = None,
     token: Optional[str] = None,
+    use_ssl: bool = True,
+    port: Optional[int] = None,
 ):
     """One time setup to configure the SDK to connect to Eto API
 
@@ -167,10 +270,14 @@ def configure(
     token: str, default None
         the api token. If omitted then will default to ETO_API_TOKEN
         environment variable
+    use_ssl: bool, default True
+        Whether to use an SSL-enabled connection
+    port: int, default None
+        Optional custom port to connect on
     """
     url = None
     if account is not None:
-        url = _get_account_url(account)
+        url = _get_account_url(account, use_ssl, port)
     url = url or Config.ETO_HOST_URL
     token = token or Config.ETO_API_TOKEN
     if url is None:

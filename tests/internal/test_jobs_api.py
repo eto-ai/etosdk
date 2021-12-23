@@ -37,8 +37,8 @@ class TestJobsApi(unittest.TestCase):
         """
         pass
 
-    def test_list_ingest_job(self):
-        """Test case for list_ingest_job
+    def test_list_ingest_jobs(self):
+        """Test case for list_ingest_jobs
 
         List all dataset ingestion jobs  # noqa: E501
         """

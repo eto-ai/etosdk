@@ -13,13 +13,18 @@ import sys  # noqa: F401
 
 from eto.internal.api_client import ApiClient
 from eto.internal.api_client import Endpoint as _Endpoint
-from eto.internal.model.dataset import Dataset
+from eto.internal.model.dataset_details import DatasetDetails
 from eto.internal.model.inline_response200 import InlineResponse200
 from eto.internal.model.inline_response404 import InlineResponse404
-from eto.internal.model_utils import check_allowed_values  # noqa: F401
-from eto.internal.model_utils import (check_validations, date, datetime,
-                                      file_type, none_type,
-                                      validate_and_convert_types)
+from eto.internal.model_utils import (  # noqa: F401
+    check_allowed_values,
+    check_validations,
+    date,
+    datetime,
+    file_type,
+    none_type,
+    validate_and_convert_types,
+)
 
 
 class DatasetsApi(object):
@@ -35,7 +40,7 @@ class DatasetsApi(object):
         self.api_client = api_client
         self.get_dataset_endpoint = _Endpoint(
             settings={
-                "response_type": (Dataset,),
+                "response_type": (DatasetDetails,),
                 "auth": [],
                 "endpoint_path": "/api/v1/projects/{project_id}/datasets/{dataset_id}",
                 "operation_id": "get_dataset",
@@ -148,13 +153,16 @@ class DatasetsApi(object):
             _check_return_type (bool): specifies if type checking
                 should be done one the data received from the server.
                 Default is True.
+            _content_type (str/None): force body content-type.
+                Default is None and content-type will be predicted by allowed
+                content-types and body.
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
             async_req (bool): execute request asynchronously
 
         Returns:
-            Dataset
+            DatasetDetails
                 If the method is called asynchronously, returns the request
                 thread.
         """
@@ -164,6 +172,7 @@ class DatasetsApi(object):
         kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
         kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
         kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
         kwargs["project_id"] = project_id
         kwargs["dataset_id"] = dataset_id
@@ -197,6 +206,9 @@ class DatasetsApi(object):
             _check_return_type (bool): specifies if type checking
                 should be done one the data received from the server.
                 Default is True.
+            _content_type (str/None): force body content-type.
+                Default is None and content-type will be predicted by allowed
+                content-types and body.
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
@@ -213,6 +225,7 @@ class DatasetsApi(object):
         kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
         kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
         kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
         kwargs["project_id"] = project_id
         return self.list_datasets_endpoint.call_with_http_info(**kwargs)

@@ -19,8 +19,12 @@ from datetime import date, datetime  # noqa: F401
 
 from dateutil.parser import parse
 
-from eto.internal.exceptions import (ApiAttributeError, ApiKeyError,
-                                     ApiTypeError, ApiValueError)
+from eto.internal.exceptions import (
+    ApiAttributeError,
+    ApiKeyError,
+    ApiTypeError,
+    ApiValueError,
+)
 
 none_type = type(None)
 file_type = io.IOBase

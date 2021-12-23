@@ -35,27 +35,27 @@ def test_list_datasets():
     eto.configure()
     datasets = eto.list_datasets()
     assert len(datasets) == 1
-    assert datasets[0]["project_id"] == "default"
-    assert datasets[0]["dataset_id"] == "coco"
+    assert datasets.iloc[0].project_id == "default"
+    assert datasets.iloc[0].dataset_id == "little_coco"
 
 
 def test_get_dataset():
     eto.configure()
-    d = eto.get_dataset("coco")
-    assert d["project_id"] == "default"
-    assert d["dataset_id"] == "coco"
-    assert d["uri"] == "s3a://eto-public/datasets/coco"
+    d = eto.get_dataset("little_coco")
+    assert d.project_id == "default"
+    assert d.dataset_id == "little_coco"
+    assert d.uri.endswith("little_coco")
 
 
 def test_pandas_reader():
     eto.configure()
-    df = pd.read_eto("coco", limit=10)
+    df = pd.read_eto("little_coco", limit=10)
     assert len(df) == 10
 
 
 def test_rikai_resolver():
     eto.configure()
-    loader = DataLoader("coco")
+    loader = DataLoader("little_coco")
     next(loader.__iter__())
 
 
@@ -70,4 +70,10 @@ def test_ingest_coco():
         },
         partition="split",
     )
-    assert job["id"] is not None
+    assert job.id is not None
+    assert job.check_status() in ("created", "scheduled", "running")
+    jobs = eto.list_jobs("default")
+    assert len(jobs) > 0
+    assert job.id in set([row.id for _, row in jobs.iterrows()])
+    assert all([row.project_id == "default" for _, row in jobs.iterrows()])
+    job.wait(1)

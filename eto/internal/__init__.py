@@ -14,9 +14,16 @@ __version__ = "1.0.0"
 
 # import ApiClient
 from eto.internal.api_client import ApiClient
+
 # import Configuration
 from eto.internal.configuration import Configuration
+
 # import exceptions
-from eto.internal.exceptions import (ApiAttributeError, ApiException,
-                                     ApiKeyError, ApiTypeError, ApiValueError,
-                                     OpenApiException)
+from eto.internal.exceptions import (
+    ApiAttributeError,
+    ApiException,
+    ApiKeyError,
+    ApiTypeError,
+    ApiValueError,
+    OpenApiException,
+)

@@ -21,7 +21,7 @@ class Config:
         return parser["DEFAULT"]
 
     @classmethod
-    def create_config(cls, url: str, token: Optional[str]):
+    def create_config(cls, url: str, token: Optional[str] = None):
         """Create config file at XDG_CONFIG_HOME/eto/eto.conf"""
         config_home = os.environ.get("XDG_CONFIG_HOME", "~/.config")
         config_dir = pathlib.Path(config_home).expanduser() / "eto"

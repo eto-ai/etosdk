@@ -75,25 +75,3 @@ for next_record in dataset:
 ```
 
 A plain pytorch dataloader is also available from `rikai.torch.data.DataLoader`.
-
-## Local Spark configuration
-
-For now, the Eto SDK relies on PySpark locally to read some of the custom Rikai types like annotations.
-While PySpark should be automatically installed as a transitive dependency, you may find that you need
-to change the Spark configurations to suit your local setup.
-
-Your `$SPARK_HOME/conf/spark-defaults.conf` file should look something like the following:
-
-```text
-spark.sql.extensions               ai.eto.rikai.sql.spark.RikaiSparkSessionExtensions
-spark.jars.packages                ai.eto:rikai_2.12:0.0.13,org.apache.hadoop:hadoop-aws:3.2.0
-
-# AWS
-spark.executor.extraJavaOptions -Dcom.amazonaws.services.s3.enableV4=true -Dio.netty.tryReflectionSetAccessible=true
-spark.driver.extraJavaOptions -Dcom.amazonaws.services.s3.enableV4=true -Dio.netty.tryReflectionSetAccessible=true
-spark.hadoop.mapreduce.fileoutputcommitter.algorithm.version 2
-spark.hadoop.com.amazonaws.services.s3.enableV4 true
-fs.AbstractFileSystem.s3a.impl org.apache.hadoop.fs.s3a.S3A
-fs.s3a.impl org.apache.hadoop.fs.s3a.S3AFileSystem
-fs.s3a.aws.credentials.provider com.amazonaws.auth.InstanceProfileCredentialsProvider,com.amazonaws.auth.DefaultAWSCredentialsProviderChain
-```

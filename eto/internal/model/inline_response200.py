@@ -12,15 +12,21 @@ import re  # noqa: F401
 import sys  # noqa: F401
 
 from eto.internal.exceptions import ApiAttributeError
-from eto.internal.model_utils import ApiTypeError  # noqa: F401
-from eto.internal.model_utils import (ModelComposed, ModelNormal, ModelSimple,
-                                      cached_property,
-                                      change_keys_js_to_python,
-                                      convert_js_args_to_python_args, date,
-                                      datetime, file_type, none_type,
-                                      validate_get_composed_info)
-
-from ..model_utils import OpenApiModel
+from eto.internal.model_utils import (  # noqa: F401
+    ApiTypeError,
+    cached_property,
+    change_keys_js_to_python,
+    convert_js_args_to_python_args,
+    date,
+    datetime,
+    file_type,
+    ModelComposed,
+    ModelNormal,
+    ModelSimple,
+    none_type,
+    OpenApiModel,
+    validate_get_composed_info,
+)
 
 
 def lazy_import():
