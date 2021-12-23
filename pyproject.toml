@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "etosdk"
-version = "0.1"
-description = "Eto Labs python SDK"
+version = "0.2"
+description = "Eto Labs Python SDK"
 authors = ["Eto Devs <devs@eto.ai>"]
 packages = [{ include = "eto" }]
 
@@ -9,7 +9,7 @@ packages = [{ include = "eto" }]
 python = "^3.9"
 python-dateutil = "^2.8.2"
 urllib3 = "^1.26.7"
-rikai = "^0.0.13"
+rikai = "^0.0.14"
 
 [tool.poetry.dev-dependencies]
 black = "^21.10b0"
