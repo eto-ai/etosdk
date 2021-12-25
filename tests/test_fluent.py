@@ -53,6 +53,14 @@ def test_pandas_reader():
     assert len(df) == 10
 
 
+def test_pandas_reader_with_columns():
+    eto.configure()
+    df = pd.read_eto("little_coco", columns=['image_id', 'annotations'],
+                     limit=10)
+    assert len(df) == 10
+    assert (df.columns == ['image_id', 'annotations']).all()
+
+
 def test_rikai_resolver():
     eto.configure()
     loader = DataLoader("little_coco")
