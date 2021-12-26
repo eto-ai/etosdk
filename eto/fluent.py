@@ -1,5 +1,6 @@
 import logging
 import time
+from itertools import islice
 from typing import Iterable, Optional, Union
 from urllib.parse import urlparse
 
@@ -165,31 +166,6 @@ def get_job_info(job_id: str, project_id: str = "default") -> Job:
 
 def init():
     # monkey patch pandas
-    def read_eto(dataset_name: str, limit: int = None) -> pd.DataFrame:
-        """Read an Eto dataset as a pandas dataframe
-
-        Parameters
-        ----------
-        dataset_name: str
-            The name of the dataset to be read
-        limit: Optional[int]
-            The max rows to retrieve. If omitted or <=0 then all rows are retrieved
-        """
-        uri = _normalize_uri(get_dataset(dataset_name).uri)
-        dataset = RikaiDataset(uri)
-        if limit is None or limit <= 0:
-            return pd.DataFrame(dataset)
-        else:
-            rows = [None] * limit
-            i = 0
-            for i, r in enumerate(dataset):
-                rows[i] = r
-                if i == limit - 1:
-                    break
-            if i < limit - 1:
-                rows = rows[: i + 1]
-            return pd.DataFrame(rows)
-
     pd.read_eto = read_eto
 
     # register Rikai resolver
@@ -198,19 +174,53 @@ def init():
     # Suppress Rikai info output
     logger.setLevel(logging.WARNING)
 
+    _patch_openapi_client()
+
+
+def read_eto(dataset_name: str, limit: int = None) -> pd.DataFrame:
+    """Read an Eto dataset as a pandas dataframe
+
+    Parameters
+    ----------
+    dataset_name: str
+        The name of the dataset to be read
+    limit: Optional[int]
+        The max rows to retrieve. If omitted or <=0 then all rows are retrieved
+    """
+    uri = _normalize_uri(get_dataset(dataset_name).uri)
+    dataset = RikaiDataset(uri)
+    if limit is None or limit <= 0:
+        return pd.DataFrame(dataset)
+    else:
+        rows = [None] * limit
+        i = 0
+        for i, r in enumerate(dataset):
+            rows[i] = r
+            if i == limit - 1:
+                break
+        if i < limit - 1:
+            rows = rows[: i + 1]
+        return pd.DataFrame(rows)
+
+
+def _patch_openapi_client():
     # Monkey patch the generated openapi classes
     # update the to_str method in DatasetDetails for better schema display
     def to_str(self):
-        return "DatasetDetails:\n" + pd.Series(self.to_dict()).to_string(dtype=False)
+        summary = pd.Series(self.to_dict()).to_string(dtype=False)
+        return "DatasetDetails:\n" + summary
 
     DatasetDetails.to_str = to_str
 
     def _repr_html_(self):
         fields = pd.Series(self.to_dict())
-        headers = fields[["project_id", "dataset_id", "uri", "created_at"]].to_string(
-            dtype=False
+        cols = ["project_id", "dataset_id", "uri", "size", "created_at"]
+        headers = fields[cols].to_string(dtype=False)
+        schema = pd.DataFrame(
+            list(_convert_types(self.schema).items()),
+            columns=["name", "type"],
         )
-        schema = pd.DataFrame(self.schema["fields"])[["name", "type"]]
+        schema.style.set_tooltips(schema)
         return f"<pre>{headers}\nSchema</pre>" + schema._repr_html_()
 
     DatasetDetails._repr_html_ = _repr_html_
@@ -221,30 +231,29 @@ def init():
 
     Job.check_status = check_status
 
-    def wait(self, max_seconds: int = -1, poke_interval: int = 10) -> str:
-        """Wait for the job to complete (either failed or success)
+    Job.wait = _wait_for_job
 
-        Parameters
-        ----------
-        max_seconds: int, default -1
-          Max number of seconds to wait. If -1 wait forever.
-        poke_interval: int, default 10
-          Interval between checks in seconds
-        """
-        status = self.status
-        sleep_sec = (
-            poke_interval if max_seconds < 0 else min(poke_interval, max_seconds)
-        )
-        elapsed = 0
-        while status not in ("failed", "success"):
-            time.sleep(sleep_sec)
-            status = self.check_status()
-            elapsed += poke_interval
-            if 0 <= max_seconds < elapsed:
-                break
-        return status
 
-    Job.wait = wait
+def _wait_for_job(self, max_seconds: int = -1, poke_interval: int = 10) -> str:
+    """Wait for the job to complete (either failed or success)
+
+    Parameters
+    ----------
+    max_seconds: int, default -1
+      Max number of seconds to wait. If -1 wait forever.
+    poke_interval: int, default 10
+      Interval between checks in seconds
+    """
+    status = self.status
+    sleep_sec = poke_interval if max_seconds < 0 else min(poke_interval, max_seconds)
+    elapsed = 0
+    while status not in ("failed", "success"):
+        time.sleep(sleep_sec)
+        status = self.check_status()
+        elapsed += poke_interval
+        if 0 <= max_seconds < elapsed:
+            break
+    return status
 
 
 def _get_account_url(account, use_ssl, port):
@@ -253,6 +262,27 @@ def _get_account_url(account, use_ssl, port):
     if port is not None:
         url = url + f":{port}"
     return url
+
+
+def _convert_types(schema: Union[str, dict]):
+    """Convert schema fields for better display"""
+    if isinstance(schema, str):
+        # simple types
+        return schema
+    typ = schema['type']
+    if typ == "array":
+        element_type = _convert_types(schema['elementType'])
+        return f"[{element_type}]"
+    elif typ == "struct":
+        fields = schema['fields']
+        return {f['name']: _convert_types(f['type']) for f in fields}
+    elif typ == "map":
+        return {_convert_types(schema['keyType']):
+                _convert_types(schema['valueType'])}
+    elif typ == "udt":
+        return schema.get("pyClass", schema["class"]).rsplit(".", 1)[-1]
+    else:
+        raise ValueError(f"Unrecognized field type {typ}")
 
 
 def configure(
