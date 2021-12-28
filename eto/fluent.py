@@ -177,18 +177,23 @@ def init():
     _patch_openapi_client()
 
 
-def read_eto(dataset_name: str, limit: int = None) -> pd.DataFrame:
+def read_eto(dataset_name: str, columns: Union[str, list[str]] = None,
+             limit: int = None) -> pd.DataFrame:
     """Read an Eto dataset as a pandas dataframe
 
     Parameters
     ----------
     dataset_name: str
         The name of the dataset to be read
+    columns: str or list of str, default None
+        Which columns to read in. All columns by default.
     limit: Optional[int]
         The max rows to retrieve. If omitted or <=0 then all rows are retrieved
     """
     uri = _normalize_uri(get_dataset(dataset_name).uri)
-    dataset = RikaiDataset(uri)
+    if isinstance(columns, str):
+        columns = [columns]
+    dataset = RikaiDataset(uri, columns)
     if limit is None or limit <= 0:
         return pd.DataFrame(dataset)
     else:
