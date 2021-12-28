@@ -11,12 +11,12 @@ from rikai.parquet.dataset import Dataset as RikaiDataset
 
 from eto.config import Config
 from eto.connectors.coco import CocoConnector, CocoSource
-from eto.internal.api.jobs_api import JobsApi
-from eto.internal.api_client import ApiClient
-from eto.internal.apis import DatasetsApi
-from eto.internal.configuration import Configuration
-from eto.internal.model.dataset_details import DatasetDetails
-from eto.internal.model.job import Job
+from eto._internal.api.jobs_api import JobsApi
+from eto._internal.api_client import ApiClient
+from eto._internal.apis import DatasetsApi
+from eto._internal.configuration import Configuration
+from eto._internal.model.dataset_details import DatasetDetails
+from eto._internal.model.job import Job
 from eto.resolver import register_resolver
 from eto.util import get_dataset_ref_parts
 
@@ -95,8 +95,7 @@ def ingest_coco(
     mode: str = "append",
     partition: str = None,
 ) -> Job:
-    """Create a data ingestion job to convert coco datasets to Rikai format
-    and create a new entry in the Eto dataset registry
+    """Create a data ingestion job to convert coco to Rikai format and create a new entry in the Eto dataset registry
 
     Parameters
     ----------
@@ -177,8 +176,9 @@ def init():
     _patch_openapi_client()
 
 
-def read_eto(dataset_name: str, columns: Union[str, list[str]] = None,
-             limit: int = None) -> pd.DataFrame:
+def read_eto(
+    dataset_name: str, columns: Union[str, list[str]] = None, limit: int = None
+) -> pd.DataFrame:
     """Read an Eto dataset as a pandas dataframe
 
     Parameters
@@ -274,16 +274,15 @@ def _convert_types(schema: Union[str, dict]):
     if isinstance(schema, str):
         # simple types
         return schema
-    typ = schema['type']
+    typ = schema["type"]
     if typ == "array":
-        element_type = _convert_types(schema['elementType'])
+        element_type = _convert_types(schema["elementType"])
         return f"[{element_type}]"
     elif typ == "struct":
-        fields = schema['fields']
-        return {f['name']: _convert_types(f['type']) for f in fields}
+        fields = schema["fields"]
+        return {f["name"]: _convert_types(f["type"]) for f in fields}
     elif typ == "map":
-        return {_convert_types(schema['keyType']):
-                _convert_types(schema['valueType'])}
+        return {_convert_types(schema["keyType"]): _convert_types(schema["valueType"])}
     elif typ == "udt":
         return schema.get("pyClass", schema["class"]).rsplit(".", 1)[-1]
     else:

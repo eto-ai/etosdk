@@ -8,7 +8,7 @@ from rikai.torch.data import DataLoader
 import eto
 from eto.config import Config
 from eto.fluent import _get_api
-from eto.internal.api.datasets_api import DatasetsApi
+from eto._internal.api.datasets_api import DatasetsApi
 
 
 @pytest.fixture(autouse=True)
@@ -55,10 +55,9 @@ def test_pandas_reader():
 
 def test_pandas_reader_with_columns():
     eto.configure()
-    df = pd.read_eto("little_coco", columns=['image_id', 'annotations'],
-                     limit=10)
+    df = pd.read_eto("little_coco", columns=["image_id", "annotations"], limit=10)
     assert len(df) == 10
-    assert (df.columns == ['image_id', 'annotations']).all()
+    assert (df.columns == ["image_id", "annotations"]).all()
 
 
 def test_rikai_resolver():
