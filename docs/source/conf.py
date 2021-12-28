@@ -10,15 +10,15 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
 
+sys.path.insert(0, os.path.abspath("../eto"))
 
 # -- Project information -----------------------------------------------------
 
 project = "Eto Python SDK"
-copyright = "2021, Eto Labs"
+copyright = "2022, Eto Labs"
 author = "Eto Labs"
 
 # The full version, including alpha/beta/rc tags
@@ -58,8 +58,4 @@ html_theme = "sphinx_rtd_theme"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
-# -- Path setup
-import os
-import sys
 
-sys.path.insert(0, os.path.abspath("../eto"))
