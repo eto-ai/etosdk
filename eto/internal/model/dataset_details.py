@@ -103,6 +103,7 @@ class DatasetDetails(ModelNormal):
                 str,
                 none_type,
             ),  # noqa: E501
+            "size": (int,),  # noqa: E501
         }
 
     @cached_property
@@ -115,6 +116,7 @@ class DatasetDetails(ModelNormal):
         "uri": "uri",  # noqa: E501
         "created_at": "created_at",  # noqa: E501
         "schema": "schema",  # noqa: E501
+        "size": "size",  # noqa: E501
     }
 
     read_only_vars = {}
@@ -166,6 +168,7 @@ class DatasetDetails(ModelNormal):
                                 _visited_composed_classes = (Animal,)
             created_at (str): ISO format of datetime. [optional]  # noqa: E501
             schema (bool, date, datetime, dict, float, int, list, str, none_type): [optional]  # noqa: E501
+            size (int): on-disk size in bytes. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
@@ -262,6 +265,7 @@ class DatasetDetails(ModelNormal):
                                 _visited_composed_classes = (Animal,)
             created_at (str): ISO format of datetime. [optional]  # noqa: E501
             schema (bool, date, datetime, dict, float, int, list, str, none_type): [optional]  # noqa: E501
+            size (int): on-disk size in bytes. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
