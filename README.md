@@ -2,7 +2,7 @@
 
 This is the python SDK for Eto, the AI focused data platform for teams bringing AI models to production.
 The python SDK makes it easy to integrate Eto's features into your AI training and analysis workflow.
-For a full walkthrough of Eto SDK features, see the [Getting Started](notebooks/Getting%20Started.ipynb)
+For a full walkthrough of Eto SDK features, see the [Getting Started](https://github.com/eto-ai/etosdk/blob/main/notebooks/Getting%20Started.ipynb)
 Jupyter notebook
 
 ## Installation
@@ -38,7 +38,7 @@ job = eto.ingest_coco('<dataset_name>',
                        'extras': {'key': 'value'}})
 ```
 
-The ingestion job will run asynchronously server-side and convert the data to [Rikai (parquet) format](github.com/eto-ai/rikai).
+The ingestion job will run asynchronously server-side and convert the data to [Rikai (parquet) format](https://github.com/eto-ai/rikai).
 Once complete, you should be able to see it in the data registry:
 
 ```python

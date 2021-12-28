@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from eto.internal.api.jobs_api import CreateJobRequest, Job, JobsApi
+from eto._internal.api.jobs_api import CreateJobRequest, Job, JobsApi
 
 
 class Connector(ABC):

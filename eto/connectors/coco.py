@@ -1,9 +1,9 @@
 from ctypes import Union
 
 from eto.connectors.base import Connector
-from eto.internal.api.jobs_api import CreateJobRequest, JobsApi
-from eto.internal.model.coco_config import CocoConfig
-from eto.internal.model.coco_source import CocoSource
+from eto._internal.api.jobs_api import CreateJobRequest, JobsApi
+from eto._internal.model.coco_config import CocoConfig
+from eto._internal.model.coco_source import CocoSource
 
 
 class CocoConnector(Connector):

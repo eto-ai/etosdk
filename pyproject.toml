@@ -2,8 +2,18 @@
 name = "etosdk"
 version = "0.2"
 description = "Eto Labs Python SDK"
+readme = "README.md"
 authors = ["Eto Devs <devs@eto.ai>"]
 packages = [{ include = "eto" }]
+license = "Apache-2.0"
+repository = "https://github.com/eto-ai/etosdk"
+keywords = ["data engineering", "ML", "AI", "parquet", "unstructured data"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -17,6 +27,9 @@ pytest = "^6.2.5"
 pylint = "^2.11.1"
 isort = "^5.10.1"
 mypy = "^0.910"
+Sphinx = "^4.3.2"
+sphinx-rtd-theme = "^1.0.0"
+myst-parser = "^0.16.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
