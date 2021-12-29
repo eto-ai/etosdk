@@ -1,3 +1,8 @@
+![Apache License](https://img.shields.io/github/license/eto-ai/etosdk?style=for-the-badge)
+[![Read The Doc](https://img.shields.io/readthedocs/etosdk?style=for-the-badge)](https://etosdk.readthedocs.io/)
+![Pypi version](https://img.shields.io/pypi/v/etosdk?style=for-the-badge)
+
+
 # Eto Labs Python SDK
 
 This is the python SDK for Eto, the AI focused data platform for teams bringing AI models to production.
