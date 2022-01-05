@@ -5,10 +5,12 @@
 
 # Eto Labs Python SDK
 
-This is the python SDK for Eto, the AI focused data platform for teams bringing AI models to production.
+This is the python SDK for [Eto](https://www.eto.ai), the AI focused data platform for teams bringing AI models to production.
 The python SDK makes it easy to integrate Eto's features into your AI training and analysis workflow.
 For a full walkthrough of Eto SDK features, see the [Getting Started](https://github.com/eto-ai/etosdk/blob/main/notebooks/Getting%20Started.ipynb)
-Jupyter notebook
+Jupyter notebook.
+
+To use the SDK, you'll need an [Eto](https://www.eto.ai) account. 
 
 ## Installation
 
