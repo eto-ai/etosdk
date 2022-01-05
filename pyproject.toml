@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "etosdk"
-version = "0.2"
+version = "0.3"
 description = "Eto Labs Python SDK"
 readme = "README.md"
 authors = ["Eto Devs <devs@eto.ai>"]
@@ -19,7 +19,7 @@ classifiers = [
 python = "^3.9"
 python-dateutil = "^2.8.2"
 urllib3 = "^1.26.7"
-rikai = "^0.0.14"
+rikai = "~0.0.18"
 
 [tool.poetry.dev-dependencies]
 black = "^21.10b0"

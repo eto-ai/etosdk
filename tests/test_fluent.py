@@ -3,7 +3,7 @@ from unittest import mock
 
 import pandas as pd
 import pytest
-from rikai.torch.data import DataLoader
+from rikai.torch.data import Dataset
 
 import eto
 from eto.config import Config
@@ -62,8 +62,8 @@ def test_pandas_reader_with_columns():
 
 def test_rikai_resolver():
     eto.configure()
-    loader = DataLoader("little_coco")
-    next(loader.__iter__())
+    dataset = Dataset("little_coco")
+    next(dataset.__iter__())
 
 
 def test_ingest_coco():
