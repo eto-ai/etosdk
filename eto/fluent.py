@@ -1,5 +1,7 @@
 import logging
+import os
 import time
+import uuid
 from itertools import islice
 from typing import Iterable, Optional, Union
 from urllib.parse import urlparse
@@ -9,16 +11,17 @@ from rikai.io import _normalize_uri
 from rikai.logging import logger
 from rikai.parquet.dataset import Dataset as RikaiDataset
 
-from eto.config import Config
-from eto.connectors.coco import CocoConnector, CocoSource
 from eto._internal.api.jobs_api import JobsApi
 from eto._internal.api_client import ApiClient
 from eto._internal.apis import DatasetsApi
 from eto._internal.configuration import Configuration
 from eto._internal.model.dataset_details import DatasetDetails
 from eto._internal.model.job import Job
+from eto.config import Config
+from eto.connectors.coco import CocoConnector, CocoSource
+from eto.connectors.rikai import RikaiConnector
 from eto.resolver import register_resolver
-from eto.util import get_dataset_ref_parts
+from eto.util import add_method, get_dataset_ref_parts
 
 __all__ = [
     "list_datasets",
@@ -133,6 +136,41 @@ def ingest_coco(
     return conn.ingest()
 
 
+def ingest_rikai(
+    dataset_name: str,
+    url: str,
+    mode: str = "append",
+    partition: str = None,
+) -> Job:
+    """Create a data ingestion job to create a new dataset using existing Rikai format data
+
+    Parameters
+    ----------
+    dataset_name: str
+        The name of the new Eto dataset
+    url: str
+        The url of the existing Rikai format data to be added to the catalog
+    mode: str, default 'append'
+        Defines behavior when the dataset already exists
+        'overwrite' means existing data is replaced
+        'append' means the new data will be added
+    partition: str or list of str
+        Which field to partition on (ex. 'split')
+    """
+    conn = RikaiConnector(_get_api("jobs"))
+    if "." in dataset_name:
+        project_id, dataset_id = dataset_name.split(".", 1)
+    else:
+        project_id, dataset_id = "default", dataset_name
+    conn.project_id = project_id
+    conn.dataset_id = dataset_id
+    conn.url = url
+    conn.mode = mode or "append"
+    if partition is not None:
+        conn.partition = [partition] if isinstance(partition, str) else partition
+    return conn.ingest()
+
+
 def list_jobs(
     project_id: str = "default", _page_size: int = 50, _start_page_token: int = 0
 ) -> pd.DataFrame:
@@ -206,6 +244,52 @@ def read_eto(
         if i < limit - 1:
             rows = rows[: i + 1]
         return pd.DataFrame(rows)
+
+
+@add_method(pd.DataFrame)
+def to_eto(
+    self,
+    dataset_name: str,
+    schema: "pyspark.sql.types.StructType" = None,
+    infer_schema: bool = True,
+    partition: Optional[str] or list[str] = None,
+    mode: str = "append",
+    async_: bool = False,
+    max_wait_sec: int = -1,
+):
+    """Create a new dataset from this DataFrame
+
+    Parameters
+    ----------
+    dataset_name: str
+        The name of the new dataset that will be created
+    schema: pyspark.sql.types.StructType
+        The data schema to save as
+    infer_schema: bool, default True
+        Infer Rikai types based on the first row
+    partition: Optional[str] or list[str], default None
+        Which columns to partition by
+    mode: str, default 'append'
+        Controls behavior if the dataset_name already exists
+    async_: bool, default False
+        If True then return immediately with the ingestion Job
+    max_wait_sec: int, default -1
+        Maximum number of seconds to wait. If negative then wait forever.
+        If async_ is True then this is ignored
+    """
+    from eto.spark import get_session
+
+    spark = get_session()
+    df = spark.createDataFrame(self)
+    sdk_conf = Config.load()
+    path = os.path.join(sdk_conf["tmp_workspace_path"], str(uuid.uuid4()))
+    df.write.format("rikai").mode(mode).partitionBy(partition).save(path)
+    job = ingest_rikai(dataset_name, path, mode, partition)
+    if async_:
+        return job
+    else:
+        job.wait(max_wait_sec)
+        return job
 
 
 def _patch_openapi_client():

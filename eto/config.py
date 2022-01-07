@@ -2,6 +2,7 @@ import configparser
 import os
 import pathlib
 from typing import Optional
+from urllib.parse import urlparse
 
 
 class Config:
@@ -21,14 +22,27 @@ class Config:
         return parser["DEFAULT"]
 
     @classmethod
-    def create_config(cls, url: str, token: Optional[str] = None):
+    def create_config(
+        cls,
+        url: str,
+        token: Optional[str] = None,
+        tmp_workspace_path: Optional[str] = None,
+    ):
         """Create config file at XDG_CONFIG_HOME/eto/eto.conf"""
         config_home = os.environ.get("XDG_CONFIG_HOME", "~/.config")
         config_dir = pathlib.Path(config_home).expanduser() / "eto"
         os.makedirs(config_dir, exist_ok=True)
         config_file = config_dir / "eto.conf"
         parser = configparser.ConfigParser()
-        parser["DEFAULT"] = {"url": url, "token": token}
+        parsed = urlparse(tmp_workspace_path)
+        scheme = parsed.scheme
+        if not scheme:
+            os.makedirs(tmp_workspace_path, exist_ok=True)
+        parser["DEFAULT"] = {
+            "url": url,
+            "token": token,
+            "tmp_workspace_path": tmp_workspace_path,
+        }
         with config_file.open("w") as cf:
             parser.write(cf)
 

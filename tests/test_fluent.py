@@ -6,9 +6,9 @@ import pytest
 from rikai.torch.data import Dataset
 
 import eto
+from eto._internal.api.datasets_api import DatasetsApi
 from eto.config import Config
 from eto.fluent import _get_api
-from eto._internal.api.datasets_api import DatasetsApi
 
 
 @pytest.fixture(autouse=True)
