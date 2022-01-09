@@ -34,18 +34,22 @@ class Config:
         os.makedirs(config_dir, exist_ok=True)
         config_file = config_dir / "eto.conf"
         parser = configparser.ConfigParser()
-        parsed = urlparse(tmp_workspace_path)
-        scheme = parsed.scheme
-        if not scheme:
-            os.makedirs(tmp_workspace_path, exist_ok=True)
-        parser["DEFAULT"] = {
+        conf = {
             "url": url,
             "token": token,
-            "tmp_workspace_path": tmp_workspace_path,
         }
+        if tmp_workspace_path:
+            parsed = urlparse(tmp_workspace_path)
+            scheme = parsed.scheme
+            if not scheme:
+                os.makedirs(tmp_workspace_path, exist_ok=True)
+            conf["tmp_workspace_path"] = tmp_workspace_path
+        parser["DEFAULT"] = conf
         with config_file.open("w") as cf:
             parser.write(cf)
 
     ETO_HOST_URL = os.environ.get("ETO_HOST_URL", None)
 
     ETO_API_TOKEN = os.environ.get("ETO_API_TOKEN", None)
+
+    ETO_TMP_WORKSPACE_PATH = os.environ.get("ETO_TMP_WORKSPACE_PATH", None)

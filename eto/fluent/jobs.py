@@ -1,3 +1,4 @@
+"""Eto SDK fluent API for managing jobs"""
 import time
 from typing import Iterable, Union
 

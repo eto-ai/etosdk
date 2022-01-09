@@ -8,7 +8,7 @@ from rikai.torch.data import Dataset
 import eto
 from eto._internal.api.datasets_api import DatasetsApi
 from eto.config import Config
-from eto.fluent import _get_api
+from eto.fluent.client import get_api
 
 
 @pytest.fixture(autouse=True)
@@ -26,7 +26,7 @@ def test_configure():
 
 def test_get_api():
     eto.configure("account", "token")
-    api = _get_api("datasets")
+    api = get_api("datasets")
     assert isinstance(api, DatasetsApi)
     assert api.api_client.configuration.host == "https://account.eto.ai"
 
@@ -84,3 +84,10 @@ def test_ingest_coco():
     assert job.id in set([row.id for _, row in jobs.iterrows()])
     assert all([row.project_id == "default" for _, row in jobs.iterrows()])
     job.wait(1)
+
+
+def test_to_eto():
+    eto.configure()
+    df = pd.read_eto("little_coco", limit=10)
+    job = df.to_eto("new_coco", max_wait_sec=1)
+    assert job.id is not None

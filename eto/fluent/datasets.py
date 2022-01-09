@@ -1,4 +1,5 @@
-import os
+"""Eto SDK Fluent API for managing datasets"""
+from itertools import islice
 import os
 import uuid
 from typing import Optional, Union
@@ -61,14 +62,7 @@ def read_eto(
     if limit is None or limit <= 0:
         return pd.DataFrame(dataset)
     else:
-        rows = [None] * limit
-        i = 0
-        for i, r in enumerate(dataset):
-            rows[i] = r
-            if i == limit - 1:
-                break
-        if i < limit - 1:
-            rows = rows[: i + 1]
+        rows = islice(dataset, limit)
         return pd.DataFrame(rows)
 
 
@@ -80,7 +74,6 @@ def to_eto(
     mode: str = "append",
     async_: bool = False,
     max_wait_sec: int = -1,
-    infer_schema: bool = True,
     schema: "pyspark.sql.types.StructType" = None,
 ):
     """Create a new dataset from this DataFrame
@@ -98,18 +91,13 @@ def to_eto(
     max_wait_sec: int, default -1
         Maximum number of seconds to wait. If negative then wait forever.
         If async_ is True then this is ignored
-    infer_schema: bool, default True
-        Infer Rikai types based on the first row
-    schema: pyspark.sql.types.StructType
-        The data schema to save as
+    schema: pyspark.sql.types.StructType, default None
+        By default the schema is inferred. Specify this override if needed.
     """
     from eto.spark import get_session
 
     spark = get_session()
-    if infer_schema:
-        df = spark.createDataFrame(self)
-    else:
-        df = spark.createDataFrame(self, schema)
+    df = spark.createDataFrame(self, schema)
     sdk_conf = Config.load()
     path = os.path.join(sdk_conf["tmp_workspace_path"], str(uuid.uuid4()))
     df.write.format("rikai").mode(mode).partitionBy(partition).save(path)

@@ -76,6 +76,7 @@ def configure(
         url = _get_account_url(account, use_ssl, port)
     url = url or Config.ETO_HOST_URL
     token = token or Config.ETO_API_TOKEN
+    tmp_workspace_path = tmp_workspace_path or Config.ETO_TMP_WORKSPACE_PATH
     if url is None:
         raise ValueError("Please provide the host url for the Eto API")
     if token is None:
