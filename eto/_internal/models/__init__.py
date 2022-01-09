@@ -19,3 +19,4 @@ from eto._internal.model.inline_response404 import InlineResponse404
 from eto._internal.model.inline_response2001 import InlineResponse2001
 from eto._internal.model.job import Job
 from eto._internal.model.result_set import ResultSet
+from eto._internal.model.rikai_config import RikaiConfig

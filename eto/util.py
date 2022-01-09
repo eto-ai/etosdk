@@ -2,6 +2,7 @@
 import configparser
 import os
 import pathlib
+from functools import wraps
 from typing import Optional
 from urllib.parse import ParseResult, urlparse
 
@@ -43,3 +44,17 @@ def get_dataset_ref_parts(qualified_name: str):
     else:
         project_id, dataset_id = None, qualified_name
     return project_id, dataset_id
+
+
+def add_method(cls):
+    """Add a method to an existing class"""
+
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            return func(self, *args, **kwargs)
+
+        setattr(cls, func.__name__, wrapper)
+        return func
+
+    return decorator

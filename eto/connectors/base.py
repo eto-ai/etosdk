@@ -40,7 +40,7 @@ class Connector(ABC):
     @connector_type.setter
     def connector_type(self, connector_type: str):
         connector_type = connector_type.lower().strip()
-        if connector_type != "coco":
+        if connector_type not in ["coco", "rikai"]:
             raise NotImplementedError("Only the Coco connector is supported")
         self._connector_type = connector_type
 
