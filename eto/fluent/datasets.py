@@ -1,7 +1,7 @@
 """Eto SDK Fluent API for managing datasets"""
-from itertools import islice
 import os
 import uuid
+from itertools import islice
 from typing import Optional, Union
 
 import pandas as pd

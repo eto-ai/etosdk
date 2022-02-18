@@ -5,15 +5,23 @@ import pandas as pd
 from rikai.logging import logger
 
 from eto.resolver import register_resolver
-from .client import *
-from .jobs import *
-from .datasets import *
 
+from .client import *
+from .datasets import *
+from .jobs import *
 
 # Define the fluent API methods here
-__all__ = ["configure", "ingest_rikai", "ingest_coco", "list_jobs",
-           "get_job_info", "CocoSource", "list_datasets", "get_dataset",
-           "init"]
+__all__ = [
+    "configure",
+    "ingest_rikai",
+    "ingest_coco",
+    "list_jobs",
+    "get_job_info",
+    "CocoSource",
+    "list_datasets",
+    "get_dataset",
+    "init",
+]
 
 
 def init():
