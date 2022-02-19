@@ -24,7 +24,7 @@ def list_datasets(project="default") -> pd.DataFrame:
         If omitted just lists datasets in 'default'
     """
     datasets = get_api("datasets").list_datasets(project)["datasets"]
-    return pd.DataFrame([x.to_dict() for x in datasets])
+    return pd.DataFrame(datasets)
 
 
 def get_dataset(dataset_name: str) -> pd.Series:
