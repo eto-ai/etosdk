@@ -3,7 +3,7 @@ from unittest import mock
 
 import pandas as pd
 import pytest
-from rikai.torch.data import Dataset
+from rikai.pytorch.data import Dataset
 
 import eto
 from eto._internal.api.datasets_api import DatasetsApi

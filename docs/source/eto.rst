@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    eto.connectors
+   eto.fluent
 
 Submodules
 ----------
@@ -16,14 +17,6 @@ eto.config module
 -----------------
 
 .. automodule:: eto.config
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-eto.fluent module
------------------
-
-.. automodule:: eto.fluent
    :members:
    :undoc-members:
    :show-inheritance:

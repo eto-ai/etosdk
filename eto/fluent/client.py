@@ -8,7 +8,6 @@ from eto._internal.apis import DatasetsApi
 from eto._internal.configuration import Configuration
 from eto.config import Config
 
-
 _LAZY_CLIENTS = {}
 
 

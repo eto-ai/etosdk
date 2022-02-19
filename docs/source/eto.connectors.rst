@@ -20,6 +20,14 @@ eto.connectors.coco module
    :undoc-members:
    :show-inheritance:
 
+eto.connectors.rikai module
+---------------------------
+
+.. automodule:: eto.connectors.rikai
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

@@ -1,3 +1,4 @@
+pytorch-sphinx-theme==3.0.7
 Sphinx==4.3
 sphinx-rtd-theme==1.0
 myst-parser==0.16
