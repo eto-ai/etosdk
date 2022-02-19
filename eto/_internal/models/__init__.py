@@ -27,4 +27,6 @@ from eto._internal.model.query import Query
 from eto._internal.model.query_status import QueryStatus
 from eto._internal.model.result_set import ResultSet
 from eto._internal.model.rikai_config import RikaiConfig
+from eto._internal.model.scalar_type import ScalarType
+from eto._internal.model.struct_type import StructType
 from eto._internal.model.tags import Tags
