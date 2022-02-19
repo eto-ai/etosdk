@@ -72,7 +72,7 @@ def to_eto(
     dataset_name: str,
     partition: Optional[str] or list[str] = None,
     mode: str = "append",
-    async_: bool = False,
+    wait: bool = True,
     max_wait_sec: int = -1,
     schema: "pyspark.sql.types.StructType" = None,
 ):
@@ -86,11 +86,11 @@ def to_eto(
         Which columns to partition by
     mode: str, default 'append'
         Controls behavior if the dataset_name already exists
-    async_: bool, default False
-        If True then return immediately with the ingestion Job
+    wait: bool, default True
+        If False then return immediately without waiting for job to complete
     max_wait_sec: int, default -1
         Maximum number of seconds to wait. If negative then wait forever.
-        If async_ is True then this is ignored
+        If wait is False then this is ignored
     schema: pyspark.sql.types.StructType, default None
         By default the schema is inferred. Specify this override if needed.
     """
@@ -102,7 +102,7 @@ def to_eto(
     path = os.path.join(sdk_conf["tmp_workspace_path"], str(uuid.uuid4()))
     df.write.format("rikai").mode(mode).partitionBy(partition).save(path)
     job = ingest_rikai(dataset_name, path, mode, partition)
-    if async_:
+    if wait:
         return job
     else:
         job.wait(max_wait_sec)

@@ -26,10 +26,11 @@ def ingest_coco(
     source: dict, Iterable[dict], CocoSource, Iterable[CocoSource]
         Specification for the raw data sources in Coco format. For multiple
         sources, just specify all of the sources in a single list
-        Example: {
-          'image_dir': 's3://path/to/images',
-          'annotation': 's3://path/to/annotation',
-          'extras': {'split': 'train'}
+        Example:
+        {
+        'image_dir': 's3://path/to/images',
+        'annotation': 's3://path/to/annotation',
+        'extras': {'split': 'train'}
         }
     mode: str, default 'append'
         Defines behavior when the dataset already exists

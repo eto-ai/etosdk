@@ -34,6 +34,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.autodoc",
     "sphinx.ext.githubpages",
+    "sphinx_rtd_theme",
     "myst_parser",
 ]
 
