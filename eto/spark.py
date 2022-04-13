@@ -8,7 +8,8 @@ def get_session():
 
     spark = (
         SparkSession.builder.config(
-            "spark.jars.packages", f"ai.eto:rikai_2.12:{rikai_jar_vers}"
+            "spark.jars.packages",
+            f"ai.eto:rikai_2.12:{rikai_jar_vers},org.apache.hadoop:hadoop-aws:3.2.3",
         )
         .appName("eto-sdk-spark")
         .master("local[*]")
