@@ -11,6 +11,12 @@ def get_session():
             "spark.jars.packages",
             f"ai.eto:rikai_2.12:{rikai_jar_vers},org.apache.hadoop:hadoop-aws:3.2.3",
         )
+        .config("com.amazonaws.services.s3.enableV4", "true")
+        .config(
+            "fs.s3a.aws.credentials.provider",
+            "com.amazonaws.auth.InstanceProfileCredentialsProvider,"
+            "com.amazonaws.auth.DefaultAWSCredentialsProviderChain",
+        )
         .appName("eto-sdk-spark")
         .master("local[*]")
         .getOrCreate()
