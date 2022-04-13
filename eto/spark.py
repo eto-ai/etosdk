@@ -9,7 +9,7 @@ def get_session():
     spark = (
         SparkSession.builder.config(
             "spark.jars.packages",
-            f"ai.eto:rikai_2.12:{rikai_jar_vers},org.apache.hadoop:hadoop-aws:3.2.2",
+            f"ai.eto:rikai_2.12:{rikai_jar_vers},org.apache.hadoop:hadoop-aws:3.2.1",
         )
         .config("com.amazonaws.services.s3.enableV4", "true")
         .config(
