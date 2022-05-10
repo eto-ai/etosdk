@@ -15,6 +15,7 @@
 # Import APIs into API package:
 from eto._internal.api.accounts_api import AccountsApi
 from eto._internal.api.datasets_api import DatasetsApi
+from eto._internal.api.insight_api import InsightApi
 from eto._internal.api.jobs_api import JobsApi
 from eto._internal.api.model_api import ModelApi
 from eto._internal.api.query_api import QueryApi
