@@ -91,3 +91,14 @@ def test_to_eto():
     df = pd.read_eto("little_coco", limit=10)
     job = df.to_eto("new_coco", max_wait_sec=1)
     assert job.id is not None
+
+
+def test_spark():
+    import eto.spark
+    eto.configure()
+    (eto.spark.configure("spark.driver.memory", "2g")
+     .configure("spark.executor.memory", "2g"))
+    spark = eto.spark.get_session()
+    assert spark.conf.get("spark.driver.memory") == "2g"
+    assert spark.conf.get("spark.executor.memory") == "2g"
+

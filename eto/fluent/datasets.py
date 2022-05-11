@@ -100,7 +100,10 @@ def to_eto(
     df = spark.createDataFrame(self, schema)
     sdk_conf = Config.load()
     path = os.path.join(sdk_conf["tmp_workspace_path"], str(uuid.uuid4()))
-    df.write.format("rikai").mode(mode).partitionBy(partition).save(path)
+    writer = df.write.format("rikai").mode(mode)
+    if partition:
+        writer = writer.partitionBy(partition)
+    writer.save(path)
     job = ingest_rikai(dataset_name, path, mode, partition)
     if wait:
         return job
