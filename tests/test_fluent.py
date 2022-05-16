@@ -1,5 +1,6 @@
 import os
 from unittest import mock
+import uuid
 
 import pandas as pd
 import pytest
@@ -102,3 +103,38 @@ def test_spark():
     assert spark.conf.get("spark.driver.memory") == "2g"
     assert spark.conf.get("spark.executor.memory") == "2g"
 
+
+@pytest.fixture(scope="session")
+def resnet_model_uri(tmp_path_factory):
+    import torch
+    import torchvision
+    tmp_path = tmp_path_factory.mktemp(str(uuid.uuid4()))
+    resnet = torchvision.models.detection.fasterrcnn_resnet50_fpn(
+        pretrained=True,
+        progress=False,
+    )
+    model_uri = tmp_path / "resnet.pth"
+    torch.save(resnet, model_uri)
+    return model_uri
+
+
+def test_log_model(resnet_model_uri):
+    import mlflow
+    import torch
+    import rikai
+    from eto.fluent.models import _get_mlflow_tracking_uri
+    eto.configure()
+    mlflow_tracking_uri = _get_mlflow_tracking_uri()
+    mlflow.set_tracking_uri(mlflow_tracking_uri)
+    with mlflow.start_run():
+        model = torch.load(resnet_model_uri)
+        eto.pytorch.log_model(
+            model,
+            "artifact_path",
+            "output_schema",
+        )
+        run_id = mlflow.active_run().info.run_id
+        run = mlflow.get_run(run_id)
+        tags = run.data.tags
+        assert tags[rikai.mlflow.CONF_MLFLOW_ARTIFACT_PATH] == "artifact_path"
+        assert tags[rikai.mlflow.CONF_MLFLOW_OUTPUT_SCHEMA] == "output_schema"

@@ -9,6 +9,7 @@ from eto.resolver import register_resolver
 from .client import *
 from .datasets import *
 from .jobs import *
+from .models import *
 
 # Define the fluent API methods here
 __all__ = [
@@ -21,6 +22,7 @@ __all__ = [
     "list_datasets",
     "get_dataset",
     "init",
+    "pytorch"
 ]
 
 
