@@ -1,4 +1,5 @@
 """Eto SDK Fluent API for managing datasets"""
+
 import os
 import uuid
 from itertools import islice
@@ -75,6 +76,7 @@ def to_eto(
     wait: bool = True,
     max_wait_sec: int = -1,
     schema: "pyspark.sql.types.StructType" = None,
+    primary_key: Optional[str] = None,
 ):
     """Create a new dataset from this DataFrame
 
@@ -93,17 +95,25 @@ def to_eto(
         If wait is False then this is ignored
     schema: pyspark.sql.types.StructType, default None
         By default the schema is inferred. Specify this override if needed.
+    primary_key: str, optional
+        Specify the primary key column in the dataset. If not presented, a
+        "_pk" column will be added with uuids.
     """
     from eto.spark import get_session
+
+    if primary_key is None:
+        primary_key = "_pk"
+        self[primary_key] = self.apply(lambda _: str(uuid.uuid4()), axis=1)
 
     spark = get_session()
     df = spark.createDataFrame(self, schema)
     sdk_conf = Config.load()
     path = os.path.join(sdk_conf["tmp_workspace_path"], str(uuid.uuid4()))
-    writer = df.write.format("rikai").mode(mode)
+    writer = df.write.format("rikai").option("rikai.primary_key", primary_key)
     if partition:
         writer = writer.partitionBy(partition)
     writer.save(path)
+
     job = ingest_rikai(dataset_name, path, mode, partition)
     if wait:
         return job
