@@ -1,6 +1,6 @@
 """Eto SDK fluent API for managing jobs"""
 import time
-from typing import Iterable, Union
+from typing import Iterable, Optional, Union
 
 import pandas as pd
 
@@ -63,6 +63,7 @@ def ingest_rikai(
     url: str,
     mode: str = "append",
     partition: str = None,
+    primary_key: Optional[str] = None
 ) -> Job:
     """Create a data ingestion job to create a new dataset using existing Rikai format data
 
@@ -90,6 +91,8 @@ def ingest_rikai(
     conn.mode = mode or "append"
     if partition is not None:
         conn.partition = [partition] if isinstance(partition, str) else partition
+    if primary_key is not None:
+        conn.primary_key = primary_key
     return conn.ingest()
 
 

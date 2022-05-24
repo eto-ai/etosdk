@@ -1,13 +1,12 @@
 """Eto SDK Fluent API for managing models"""
 from typing import Any, Optional
 
-from rikai.spark.sql.codegen.mlflow_logger import MlflowLogger, KNOWN_FLAVORS
+from rikai.spark.sql.codegen.mlflow_logger import KNOWN_FLAVORS, MlflowLogger
 
 from eto.config import Config
 
 
 class EtoMlflowLogger(MlflowLogger):
-
     def log_model(
         self,
         model: Any,
@@ -20,10 +19,19 @@ class EtoMlflowLogger(MlflowLogger):
         **kwargs,
     ):
         import mlflow
+
         uri = _get_mlflow_tracking_uri()
         mlflow.set_tracking_uri(uri)
-        super().log_model(model, artifact_path, schema, registered_model_name, customized_flavor,
-                          model_type, labels, **kwargs)
+        super().log_model(
+            model,
+            artifact_path,
+            schema,
+            registered_model_name,
+            customized_flavor,
+            model_type,
+            labels,
+            **kwargs,
+        )
 
 
 def _get_mlflow_tracking_uri():
@@ -31,7 +39,7 @@ def _get_mlflow_tracking_uri():
     url = conf["url"]
     if url.endswith("/"):
         url = url[:-1]
-    return url + '/api/mlflow'
+    return url + "/api/mlflow"
 
 
 for flavor in KNOWN_FLAVORS:

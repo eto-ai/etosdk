@@ -31,8 +31,10 @@ from eto._internal.model_utils import (  # noqa: F401
 
 def lazy_import():
     from eto._internal.model.bar_chart_y import BarChartY
+    from eto._internal.model.filter_spec import FilterSpec
 
     globals()["BarChartY"] = BarChartY
+    globals()["FilterSpec"] = FilterSpec
 
 
 class BarChart(ModelNormal):
@@ -96,11 +98,13 @@ class BarChart(ModelNormal):
         """
         lazy_import()
         return {
+            "type": (str,),  # noqa: E501
             "x": (
                 [bool, date, datetime, dict, float, int, list, str, none_type],
             ),  # noqa: E501
             "xlabel": (str,),  # noqa: E501
             "y": ([BarChartY],),  # noqa: E501
+            "filter_spec": (FilterSpec,),  # noqa: E501
         }
 
     @cached_property
@@ -108,9 +112,11 @@ class BarChart(ModelNormal):
         return None
 
     attribute_map = {
+        "type": "type",  # noqa: E501
         "x": "x",  # noqa: E501
         "xlabel": "xlabel",  # noqa: E501
         "y": "y",  # noqa: E501
+        "filter_spec": "filter_spec",  # noqa: E501
     }
 
     read_only_vars = {}
@@ -119,10 +125,11 @@ class BarChart(ModelNormal):
 
     @classmethod
     @convert_js_args_to_python_args
-    def _from_openapi_data(cls, x, xlabel, y, *args, **kwargs):  # noqa: E501
+    def _from_openapi_data(cls, type, x, xlabel, y, *args, **kwargs):  # noqa: E501
         """BarChart - a model defined in OpenAPI
 
         Args:
+            type (str):
             x ([bool, date, datetime, dict, float, int, list, str, none_type]): data of x-axis.
             xlabel (str):
             y ([BarChartY]):
@@ -158,6 +165,7 @@ class BarChart(ModelNormal):
                                 Animal class but this time we won't travel
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
+            filter_spec (FilterSpec): [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
@@ -186,6 +194,7 @@ class BarChart(ModelNormal):
         self._configuration = _configuration
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
+        self.type = type
         self.x = x
         self.xlabel = xlabel
         self.y = y
@@ -213,10 +222,11 @@ class BarChart(ModelNormal):
     )
 
     @convert_js_args_to_python_args
-    def __init__(self, x, xlabel, y, *args, **kwargs):  # noqa: E501
+    def __init__(self, type, x, xlabel, y, *args, **kwargs):  # noqa: E501
         """BarChart - a model defined in OpenAPI
 
         Args:
+            type (str):
             x ([bool, date, datetime, dict, float, int, list, str, none_type]): data of x-axis.
             xlabel (str):
             y ([BarChartY]):
@@ -252,6 +262,7 @@ class BarChart(ModelNormal):
                                 Animal class but this time we won't travel
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
+            filter_spec (FilterSpec): [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
@@ -278,6 +289,7 @@ class BarChart(ModelNormal):
         self._configuration = _configuration
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
+        self.type = type
         self.x = x
         self.xlabel = xlabel
         self.y = y

@@ -11,14 +11,16 @@
 
 from eto._internal.model.bar_chart import BarChart
 from eto._internal.model.bar_chart_y import BarChartY
+from eto._internal.model.box2d import Box2d
 from eto._internal.model.coco_config import CocoConfig
 from eto._internal.model.coco_source import CocoSource
 from eto._internal.model.create_job_request import CreateJobRequest
 from eto._internal.model.create_model_request import CreateModelRequest
 from eto._internal.model.dataset import Dataset
 from eto._internal.model.dataset_details import DatasetDetails
+from eto._internal.model.filter_spec import FilterSpec
 from eto._internal.model.heat_map_chart import HeatMapChart
-from eto._internal.model.heat_map_chart_data import HeatMapChartData
+from eto._internal.model.image import Image
 from eto._internal.model.inline_object import InlineObject
 from eto._internal.model.inline_response200 import InlineResponse200
 from eto._internal.model.inline_response404 import InlineResponse404
@@ -33,11 +35,14 @@ from eto._internal.model.mislabels_result_set_attributes import (
 )
 from eto._internal.model.model import Model
 from eto._internal.model.model_version import ModelVersion
+from eto._internal.model.polygon import Polygon
 from eto._internal.model.query import Query
 from eto._internal.model.query_status import QueryStatus
 from eto._internal.model.result_set import ResultSet
 from eto._internal.model.result_set_attributes import ResultSetAttributes
 from eto._internal.model.rikai_config import RikaiConfig
+from eto._internal.model.rle_mask import RLEMask
+from eto._internal.model.row import Row
 from eto._internal.model.scalar_type import ScalarType
 from eto._internal.model.struct_type import StructType
 from eto._internal.model.tags import Tags

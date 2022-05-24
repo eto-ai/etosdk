@@ -1,6 +1,6 @@
 import os
-from unittest import mock
 import uuid
+from unittest import mock
 
 import pandas as pd
 import pytest
@@ -96,9 +96,13 @@ def test_to_eto():
 
 def test_spark():
     import eto.spark
+
     eto.configure()
-    (eto.spark.configure("spark.driver.memory", "2g")
-     .configure("spark.executor.memory", "2g"))
+    (
+        eto.spark.configure("spark.driver.memory", "2g").configure(
+            "spark.executor.memory", "2g"
+        )
+    )
     spark = eto.spark.get_session()
     assert spark.conf.get("spark.driver.memory") == "2g"
     assert spark.conf.get("spark.executor.memory") == "2g"
@@ -108,6 +112,7 @@ def test_spark():
 def resnet_model_uri(tmp_path_factory):
     import torch
     import torchvision
+
     tmp_path = tmp_path_factory.mktemp(str(uuid.uuid4()))
     resnet = torchvision.models.detection.fasterrcnn_resnet50_fpn(
         pretrained=True,
@@ -120,9 +125,11 @@ def resnet_model_uri(tmp_path_factory):
 
 def test_log_model(resnet_model_uri):
     import mlflow
-    import torch
     import rikai
+    import torch
+
     from eto.fluent.models import _get_mlflow_tracking_uri
+
     eto.configure()
     mlflow_tracking_uri = _get_mlflow_tracking_uri()
     mlflow.set_tracking_uri(mlflow_tracking_uri)

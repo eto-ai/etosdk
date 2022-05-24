@@ -91,6 +91,8 @@ class RikaiConfig(ModelNormal):
             "dataset_name": (str,),  # noqa: E501
             "url": (str,),  # noqa: E501
             "mode": (str,),  # noqa: E501
+            "partition": ([str],),  # noqa: E501
+            "primary_key": (str,),  # noqa: E501
         }
 
     @cached_property
@@ -101,6 +103,8 @@ class RikaiConfig(ModelNormal):
         "dataset_name": "dataset_name",  # noqa: E501
         "url": "url",  # noqa: E501
         "mode": "mode",  # noqa: E501
+        "partition": "partition",  # noqa: E501
+        "primary_key": "primary_key",  # noqa: E501
     }
 
     read_only_vars = {}
@@ -148,6 +152,8 @@ class RikaiConfig(ModelNormal):
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
             mode (str): append or overwrite if dataset already exists. [optional]  # noqa: E501
+            partition ([str]): which field(s) to partition the dataset on. [optional]  # noqa: E501
+            primary_key (str): the primary key column of the dataset.. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
@@ -241,6 +247,8 @@ class RikaiConfig(ModelNormal):
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
             mode (str): append or overwrite if dataset already exists. [optional]  # noqa: E501
+            partition ([str]): which field(s) to partition the dataset on. [optional]  # noqa: E501
+            primary_key (str): the primary key column of the dataset.. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)

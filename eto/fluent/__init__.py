@@ -22,7 +22,7 @@ __all__ = [
     "list_datasets",
     "get_dataset",
     "init",
-    "pytorch"
+    "pytorch",
 ]
 
 

@@ -88,11 +88,12 @@ class StructType(ModelNormal):
                 and the value is attribute type.
         """
         return {
+            "mode": (str,),  # noqa: E501
+            "type": (str,),  # noqa: E501
             "fields": (
                 [bool, date, datetime, dict, float, int, list, str, none_type],
             ),  # noqa: E501
-            "mode": (str,),  # noqa: E501
-            "type": (str,),  # noqa: E501
+            "name": (str,),  # noqa: E501
         }
 
     @cached_property
@@ -100,9 +101,10 @@ class StructType(ModelNormal):
         return None
 
     attribute_map = {
-        "fields": "fields",  # noqa: E501
         "mode": "mode",  # noqa: E501
         "type": "type",  # noqa: E501
+        "fields": "fields",  # noqa: E501
+        "name": "name",  # noqa: E501
     }
 
     read_only_vars = {}
@@ -111,8 +113,12 @@ class StructType(ModelNormal):
 
     @classmethod
     @convert_js_args_to_python_args
-    def _from_openapi_data(cls, *args, **kwargs):  # noqa: E501
+    def _from_openapi_data(cls, mode, type, *args, **kwargs):  # noqa: E501
         """StructType - a model defined in OpenAPI
+
+        Args:
+            mode (str): nullable if the field can contain nulls
+            type (str): the simple/short field type
 
         Keyword Args:
             _check_type (bool): if True, values for parameters in openapi_types
@@ -146,8 +152,7 @@ class StructType(ModelNormal):
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
             fields ([bool, date, datetime, dict, float, int, list, str, none_type]): [optional]  # noqa: E501
-            mode (str): nullable if the field can contain nulls. [optional]  # noqa: E501
-            type (str): the simple/short field type. [optional]  # noqa: E501
+            name (str): field name. can be null if this struct is the out-most one.. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
@@ -176,6 +181,8 @@ class StructType(ModelNormal):
         self._configuration = _configuration
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
+        self.mode = mode
+        self.type = type
         for var_name, var_value in kwargs.items():
             if (
                 var_name not in self.attribute_map
@@ -200,8 +207,12 @@ class StructType(ModelNormal):
     )
 
     @convert_js_args_to_python_args
-    def __init__(self, *args, **kwargs):  # noqa: E501
+    def __init__(self, mode, type, *args, **kwargs):  # noqa: E501
         """StructType - a model defined in OpenAPI
+
+        Args:
+            mode (str): nullable if the field can contain nulls
+            type (str): the simple/short field type
 
         Keyword Args:
             _check_type (bool): if True, values for parameters in openapi_types
@@ -235,8 +246,7 @@ class StructType(ModelNormal):
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
             fields ([bool, date, datetime, dict, float, int, list, str, none_type]): [optional]  # noqa: E501
-            mode (str): nullable if the field can contain nulls. [optional]  # noqa: E501
-            type (str): the simple/short field type. [optional]  # noqa: E501
+            name (str): field name. can be null if this struct is the out-most one.. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
@@ -263,6 +273,8 @@ class StructType(ModelNormal):
         self._configuration = _configuration
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
+        self.mode = mode
+        self.type = type
         for var_name, var_value in kwargs.items():
             if (
                 var_name not in self.attribute_map
