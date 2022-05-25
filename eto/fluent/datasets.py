@@ -114,7 +114,7 @@ def to_eto(
         writer = writer.partitionBy(partition)
     writer.save(path)
 
-    job = ingest_rikai(dataset_name, path, mode, partition)
+    job = ingest_rikai(dataset_name, path, mode, partition, primary_key=primary_key)
     if wait:
         return job
     else:
