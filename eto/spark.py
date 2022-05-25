@@ -4,7 +4,7 @@ from rikai.spark.utils import get_default_jar_version
 
 def get_session():
     ver = get_default_jar_version(use_snapshot=False)
-    jars = f"org.apache.hadoop:hadoop-aws:3.1.2,ai.eto:rikai_2.12:{ver}"
+    jars = f"org.apache.hadoop:hadoop-aws:3.2.2,ai.eto:rikai_2.12:{ver}"
     builder = (
         SparkSession.builder.appName("eto-sdk-spark")
             .config("spark.jars.packages", jars)
