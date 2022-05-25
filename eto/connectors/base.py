@@ -11,6 +11,7 @@ class Connector(ABC):
         self.project_id = None
         self.dataset_id = None
         self.partition = None
+        self.primary_key = None
         self._mode = None
         self._connector_type = None
 

@@ -25,6 +25,8 @@ class RikaiConnector(Connector):
                 if isinstance(self.partition, str)
                 else self.partition
             }
+        if self.primary_key is not None:
+            kwargs["primary_key"] = self.primary_key
 
         config = RikaiConfig(
             dataset_name=f"{self.project_id}.{self.dataset_id}",

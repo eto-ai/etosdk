@@ -90,6 +90,8 @@ def ingest_rikai(
     conn.mode = mode or "append"
     if partition is not None:
         conn.partition = [partition] if isinstance(partition, str) else partition
+    if primary_key is not None:
+        conn.primary_key = primary_key
     return conn.ingest()
 
 
