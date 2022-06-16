@@ -14,8 +14,8 @@ import sys  # noqa: F401
 from eto._internal.api_client import ApiClient
 from eto._internal.api_client import Endpoint as _Endpoint
 from eto._internal.model.create_job_request import CreateJobRequest
-from eto._internal.model.inline_response2003 import InlineResponse2003
 from eto._internal.model.job import Job
+from eto._internal.model.list_ingest_jobs200_response import ListIngestJobs200Response
 from eto._internal.model_utils import (  # noqa: F401
     check_allowed_values,
     check_validations,
@@ -129,7 +129,7 @@ class JobsApi(object):
         )
         self.list_ingest_jobs_endpoint = _Endpoint(
             settings={
-                "response_type": (InlineResponse2003,),
+                "response_type": (ListIngestJobs200Response,),
                 "auth": [],
                 "endpoint_path": "/api/v1/projects/{project_id}/ingest",
                 "operation_id": "list_ingest_jobs",
@@ -215,6 +215,10 @@ class JobsApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
@@ -231,6 +235,7 @@ class JobsApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         kwargs["project_id"] = project_id
         kwargs["body"] = body
         return self.create_ingest_job_endpoint.call_with_http_info(**kwargs)
@@ -274,6 +279,10 @@ class JobsApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
@@ -290,6 +299,7 @@ class JobsApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         kwargs["project_id"] = project_id
         kwargs["job_id"] = job_id
         return self.get_ingest_job_endpoint.call_with_http_info(**kwargs)
@@ -334,10 +344,14 @@ class JobsApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
-            InlineResponse2003
+            ListIngestJobs200Response
                 If the method is called asynchronously, returns the request
                 thread.
         """
@@ -350,5 +364,6 @@ class JobsApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         kwargs["project_id"] = project_id
         return self.list_ingest_jobs_endpoint.call_with_http_info(**kwargs)

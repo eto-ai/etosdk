@@ -14,11 +14,17 @@ import sys  # noqa: F401
 from eto._internal.api_client import ApiClient
 from eto._internal.api_client import Endpoint as _Endpoint
 from eto._internal.model.dataset_details import DatasetDetails
-from eto._internal.model.inline_response404 import InlineResponse404
-from eto._internal.model.inline_response2001 import InlineResponse2001
-from eto._internal.model.inline_response2002 import InlineResponse2002
+from eto._internal.model.download_dataset200_response import DownloadDataset200Response
+from eto._internal.model.embeddings_response import EmbeddingsResponse
+from eto._internal.model.get_download_job200_response import GetDownloadJob200Response
+from eto._internal.model.list_dataset_insights200_response import (
+    ListDatasetInsights200Response,
+)
+from eto._internal.model.list_datasets200_response import ListDatasets200Response
+from eto._internal.model.list_datasets404_response import ListDatasets404Response
 from eto._internal.model.mislabels_result_set import MislabelsResultSet
 from eto._internal.model.result_set import ResultSet
+from eto._internal.model.similar_response import SimilarResponse
 from eto._internal.model_utils import (  # noqa: F401
     check_allowed_values,
     check_validations,
@@ -41,6 +47,55 @@ class DatasetsApi(object):
         if api_client is None:
             api_client = ApiClient()
         self.api_client = api_client
+        self.download_dataset_endpoint = _Endpoint(
+            settings={
+                "response_type": (DownloadDataset200Response,),
+                "auth": [],
+                "endpoint_path": "/api/v1/projects/{project_id}/datasets/{dataset_id}/download",
+                "operation_id": "download_dataset",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "project_id",
+                    "dataset_id",
+                    "filter",
+                ],
+                "required": [
+                    "project_id",
+                    "dataset_id",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "project_id": (str,),
+                    "dataset_id": (str,),
+                    "filter": (str,),
+                },
+                "attribute_map": {
+                    "project_id": "project_id",
+                    "dataset_id": "dataset_id",
+                    "filter": "filter",
+                },
+                "location_map": {
+                    "project_id": "path",
+                    "dataset_id": "path",
+                    "filter": "query",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["*/*"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
         self.get_dataset_endpoint = _Endpoint(
             settings={
                 "response_type": (DatasetDetails,),
@@ -77,6 +132,105 @@ class DatasetsApi(object):
                 "location_map": {
                     "project_id": "path",
                     "dataset_id": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["*/*"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.get_download_job_endpoint = _Endpoint(
+            settings={
+                "response_type": (GetDownloadJob200Response,),
+                "auth": [],
+                "endpoint_path": "/api/v1/projects/{project_id}/datasets/{dataset_id}/download/{job_id}",
+                "operation_id": "get_download_job",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "project_id",
+                    "dataset_id",
+                    "job_id",
+                ],
+                "required": [
+                    "project_id",
+                    "dataset_id",
+                    "job_id",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "project_id": (str,),
+                    "dataset_id": (str,),
+                    "job_id": (str,),
+                },
+                "attribute_map": {
+                    "project_id": "project_id",
+                    "dataset_id": "dataset_id",
+                    "job_id": "job_id",
+                },
+                "location_map": {
+                    "project_id": "path",
+                    "dataset_id": "path",
+                    "job_id": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["*/*"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.get_embeddings_endpoint = _Endpoint(
+            settings={
+                "response_type": (EmbeddingsResponse,),
+                "auth": [],
+                "endpoint_path": "/api/v1/projects/{project_id}/datasets/{dataset_id}/embeddings",
+                "operation_id": "get_embeddings",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "project_id",
+                    "dataset_id",
+                    "limit",
+                ],
+                "required": [
+                    "project_id",
+                    "dataset_id",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "project_id": (str,),
+                    "dataset_id": (str,),
+                    "limit": (int,),
+                },
+                "attribute_map": {
+                    "project_id": "project_id",
+                    "dataset_id": "dataset_id",
+                    "limit": "limit",
+                },
+                "location_map": {
+                    "project_id": "path",
+                    "dataset_id": "path",
+                    "limit": "query",
                 },
                 "collection_format_map": {},
             },
@@ -143,9 +297,62 @@ class DatasetsApi(object):
             },
             api_client=api_client,
         )
+        self.get_similar_endpoint = _Endpoint(
+            settings={
+                "response_type": (SimilarResponse,),
+                "auth": [],
+                "endpoint_path": "/api/v1/projects/{project_id}/datasets/{dataset_id}/similar",
+                "operation_id": "get_similar",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "project_id",
+                    "dataset_id",
+                    "limit",
+                    "source",
+                ],
+                "required": [
+                    "project_id",
+                    "dataset_id",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "project_id": (str,),
+                    "dataset_id": (str,),
+                    "limit": (int,),
+                    "source": (str,),
+                },
+                "attribute_map": {
+                    "project_id": "project_id",
+                    "dataset_id": "dataset_id",
+                    "limit": "limit",
+                    "source": "source",
+                },
+                "location_map": {
+                    "project_id": "path",
+                    "dataset_id": "path",
+                    "limit": "query",
+                    "source": "query",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["*/*"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
         self.list_dataset_insights_endpoint = _Endpoint(
             settings={
-                "response_type": (InlineResponse2002,),
+                "response_type": (ListDatasetInsights200Response,),
                 "auth": [],
                 "endpoint_path": "/api/v1/projects/{project_id}/datasets/{dataset_id}/insights",
                 "operation_id": "list_dataset_insights",
@@ -190,7 +397,7 @@ class DatasetsApi(object):
         )
         self.list_datasets_endpoint = _Endpoint(
             settings={
-                "response_type": (InlineResponse2001,),
+                "response_type": (ListDatasets200Response,),
                 "auth": [],
                 "endpoint_path": "/api/v1/projects/{project_id}/datasets",
                 "operation_id": "list_datasets",
@@ -286,6 +493,71 @@ class DatasetsApi(object):
             api_client=api_client,
         )
 
+    def download_dataset(self, project_id, dataset_id, **kwargs):
+        """Download a dataset  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.download_dataset(project_id, dataset_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            project_id (str): project id
+            dataset_id (str): dataset id
+
+        Keyword Args:
+            filter (str): filters to be applied. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _spec_property_naming (bool): True if the variable names in the input data
+                are serialized names, as specified in the OpenAPI document.
+                False if the variable names in the input data
+                are pythonic names, e.g. snake case (default)
+            _content_type (str/None): force body content-type.
+                Default is None and content-type will be predicted by allowed
+                content-types and body.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            DownloadDataset200Response
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
+        kwargs["_content_type"] = kwargs.get("_content_type")
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
+        kwargs["project_id"] = project_id
+        kwargs["dataset_id"] = dataset_id
+        return self.download_dataset_endpoint.call_with_http_info(**kwargs)
+
     def get_dataset(self, project_id, dataset_id, **kwargs):
         """Get dataset details  # noqa: E501
 
@@ -325,6 +597,10 @@ class DatasetsApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
@@ -341,9 +617,141 @@ class DatasetsApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         kwargs["project_id"] = project_id
         kwargs["dataset_id"] = dataset_id
         return self.get_dataset_endpoint.call_with_http_info(**kwargs)
+
+    def get_download_job(self, project_id, dataset_id, job_id, **kwargs):
+        """Get status of a download job  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.get_download_job(project_id, dataset_id, job_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            project_id (str): project id
+            dataset_id (str): dataset id
+            job_id (str): job id
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _spec_property_naming (bool): True if the variable names in the input data
+                are serialized names, as specified in the OpenAPI document.
+                False if the variable names in the input data
+                are pythonic names, e.g. snake case (default)
+            _content_type (str/None): force body content-type.
+                Default is None and content-type will be predicted by allowed
+                content-types and body.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            GetDownloadJob200Response
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
+        kwargs["_content_type"] = kwargs.get("_content_type")
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
+        kwargs["project_id"] = project_id
+        kwargs["dataset_id"] = dataset_id
+        kwargs["job_id"] = job_id
+        return self.get_download_job_endpoint.call_with_http_info(**kwargs)
+
+    def get_embeddings(self, project_id, dataset_id, **kwargs):
+        """Retrieve embeddings data for visualization  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.get_embeddings(project_id, dataset_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            project_id (str): project id
+            dataset_id (str): dataset id
+
+        Keyword Args:
+            limit (int): [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _spec_property_naming (bool): True if the variable names in the input data
+                are serialized names, as specified in the OpenAPI document.
+                False if the variable names in the input data
+                are pythonic names, e.g. snake case (default)
+            _content_type (str/None): force body content-type.
+                Default is None and content-type will be predicted by allowed
+                content-types and body.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            EmbeddingsResponse
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
+        kwargs["_content_type"] = kwargs.get("_content_type")
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
+        kwargs["project_id"] = project_id
+        kwargs["dataset_id"] = dataset_id
+        return self.get_embeddings_endpoint.call_with_http_info(**kwargs)
 
     def get_mislabels(self, project_id, dataset_id, **kwargs):
         """Retrieve mislabeled data  # noqa: E501
@@ -387,6 +795,10 @@ class DatasetsApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
@@ -403,9 +815,76 @@ class DatasetsApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         kwargs["project_id"] = project_id
         kwargs["dataset_id"] = dataset_id
         return self.get_mislabels_endpoint.call_with_http_info(**kwargs)
+
+    def get_similar(self, project_id, dataset_id, **kwargs):
+        """Retrieve most similar observations  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.get_similar(project_id, dataset_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            project_id (str): project id
+            dataset_id (str): dataset id
+
+        Keyword Args:
+            limit (int): [optional]
+            source (str): primary key of the source vector. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _spec_property_naming (bool): True if the variable names in the input data
+                are serialized names, as specified in the OpenAPI document.
+                False if the variable names in the input data
+                are pythonic names, e.g. snake case (default)
+            _content_type (str/None): force body content-type.
+                Default is None and content-type will be predicted by allowed
+                content-types and body.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            SimilarResponse
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
+        kwargs["_content_type"] = kwargs.get("_content_type")
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
+        kwargs["project_id"] = project_id
+        kwargs["dataset_id"] = dataset_id
+        return self.get_similar_endpoint.call_with_http_info(**kwargs)
 
     def list_dataset_insights(self, project_id, dataset_id, **kwargs):
         """Get a list of insights for this dataset.  # noqa: E501
@@ -446,10 +925,14 @@ class DatasetsApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
-            InlineResponse2002
+            ListDatasetInsights200Response
                 If the method is called asynchronously, returns the request
                 thread.
         """
@@ -462,6 +945,7 @@ class DatasetsApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         kwargs["project_id"] = project_id
         kwargs["dataset_id"] = dataset_id
         return self.list_dataset_insights_endpoint.call_with_http_info(**kwargs)
@@ -504,10 +988,14 @@ class DatasetsApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
-            InlineResponse2001
+            ListDatasets200Response
                 If the method is called asynchronously, returns the request
                 thread.
         """
@@ -520,6 +1008,7 @@ class DatasetsApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         kwargs["project_id"] = project_id
         return self.list_datasets_endpoint.call_with_http_info(**kwargs)
 
@@ -565,6 +1054,10 @@ class DatasetsApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
@@ -581,6 +1074,7 @@ class DatasetsApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         kwargs["project_id"] = project_id
         kwargs["dataset_id"] = dataset_id
         return self.preview_endpoint.call_with_http_info(**kwargs)

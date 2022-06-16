@@ -90,6 +90,7 @@ class ScalarType(ModelNormal):
         return {
             "mode": (str,),  # noqa: E501
             "type": (str,),  # noqa: E501
+            "name": (str,),  # noqa: E501
         }
 
     @cached_property
@@ -99,6 +100,7 @@ class ScalarType(ModelNormal):
     attribute_map = {
         "mode": "mode",  # noqa: E501
         "type": "type",  # noqa: E501
+        "name": "name",  # noqa: E501
     }
 
     read_only_vars = {}
@@ -107,8 +109,12 @@ class ScalarType(ModelNormal):
 
     @classmethod
     @convert_js_args_to_python_args
-    def _from_openapi_data(cls, *args, **kwargs):  # noqa: E501
+    def _from_openapi_data(cls, mode, type, *args, **kwargs):  # noqa: E501
         """ScalarType - a model defined in OpenAPI
+
+        Args:
+            mode (str): nullable if the field can contain nulls
+            type (str): the simple/short field type
 
         Keyword Args:
             _check_type (bool): if True, values for parameters in openapi_types
@@ -141,12 +147,11 @@ class ScalarType(ModelNormal):
                                 Animal class but this time we won't travel
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
-            mode (str): nullable if the field can contain nulls. [optional]  # noqa: E501
-            type (str): the simple/short field type. [optional]  # noqa: E501
+            name (str): field name. Can be null.. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
-        _spec_property_naming = kwargs.pop("_spec_property_naming", False)
+        _spec_property_naming = kwargs.pop("_spec_property_naming", True)
         _path_to_item = kwargs.pop("_path_to_item", ())
         _configuration = kwargs.pop("_configuration", None)
         _visited_composed_classes = kwargs.pop("_visited_composed_classes", ())
@@ -154,15 +159,19 @@ class ScalarType(ModelNormal):
         self = super(OpenApiModel, cls).__new__(cls)
 
         if args:
-            raise ApiTypeError(
-                "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments."
-                % (
-                    args,
-                    self.__class__.__name__,
-                ),
-                path_to_item=_path_to_item,
-                valid_classes=(self.__class__,),
-            )
+            for arg in args:
+                if isinstance(arg, dict):
+                    kwargs.update(arg)
+                else:
+                    raise ApiTypeError(
+                        "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments."
+                        % (
+                            args,
+                            self.__class__.__name__,
+                        ),
+                        path_to_item=_path_to_item,
+                        valid_classes=(self.__class__,),
+                    )
 
         self._data_store = {}
         self._check_type = _check_type
@@ -171,6 +180,8 @@ class ScalarType(ModelNormal):
         self._configuration = _configuration
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
+        self.mode = mode
+        self.type = type
         for var_name, var_value in kwargs.items():
             if (
                 var_name not in self.attribute_map
@@ -195,8 +206,12 @@ class ScalarType(ModelNormal):
     )
 
     @convert_js_args_to_python_args
-    def __init__(self, *args, **kwargs):  # noqa: E501
+    def __init__(self, mode, type, *args, **kwargs):  # noqa: E501
         """ScalarType - a model defined in OpenAPI
+
+        Args:
+            mode (str): nullable if the field can contain nulls
+            type (str): the simple/short field type
 
         Keyword Args:
             _check_type (bool): if True, values for parameters in openapi_types
@@ -229,8 +244,7 @@ class ScalarType(ModelNormal):
                                 Animal class but this time we won't travel
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
-            mode (str): nullable if the field can contain nulls. [optional]  # noqa: E501
-            type (str): the simple/short field type. [optional]  # noqa: E501
+            name (str): field name. Can be null.. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
@@ -240,15 +254,19 @@ class ScalarType(ModelNormal):
         _visited_composed_classes = kwargs.pop("_visited_composed_classes", ())
 
         if args:
-            raise ApiTypeError(
-                "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments."
-                % (
-                    args,
-                    self.__class__.__name__,
-                ),
-                path_to_item=_path_to_item,
-                valid_classes=(self.__class__,),
-            )
+            for arg in args:
+                if isinstance(arg, dict):
+                    kwargs.update(arg)
+                else:
+                    raise ApiTypeError(
+                        "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments."
+                        % (
+                            args,
+                            self.__class__.__name__,
+                        ),
+                        path_to_item=_path_to_item,
+                        valid_classes=(self.__class__,),
+                    )
 
         self._data_store = {}
         self._check_type = _check_type
@@ -257,6 +275,8 @@ class ScalarType(ModelNormal):
         self._configuration = _configuration
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
+        self.mode = mode
+        self.type = type
         for var_name, var_value in kwargs.items():
             if (
                 var_name not in self.attribute_map

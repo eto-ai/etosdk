@@ -96,9 +96,13 @@ def test_to_eto():
 
 def test_spark():
     import eto.spark
+
     eto.configure()
-    (eto.spark.configure("spark.driver.memory", "2g")
-     .configure("spark.executor.memory", "2g"))
+    (
+        eto.spark.configure("spark.driver.memory", "2g").configure(
+            "spark.executor.memory", "2g"
+        )
+    )
     spark = eto.spark.get_session()
     assert spark.conf.get("spark.driver.memory") == "2g"
     assert spark.conf.get("spark.executor.memory") == "2g"

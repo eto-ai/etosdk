@@ -30,9 +30,9 @@ from eto._internal.model_utils import (  # noqa: F401
 
 
 def lazy_import():
-    from eto._internal.model.heat_map_chart_data import HeatMapChartData
+    from eto._internal.model.filter_spec import FilterSpec
 
-    globals()["HeatMapChartData"] = HeatMapChartData
+    globals()["FilterSpec"] = FilterSpec
 
 
 class HeatMapChart(ModelNormal):
@@ -96,10 +96,13 @@ class HeatMapChart(ModelNormal):
         """
         lazy_import()
         return {
-            "data": ([HeatMapChartData],),  # noqa: E501
+            "data": (
+                [[bool, date, datetime, dict, float, int, list, str, none_type]],
+            ),  # noqa: E501
+            "type": (str,),  # noqa: E501
             "xlabel": (str,),  # noqa: E501
             "ylabel": (str,),  # noqa: E501
-            "name": (str,),  # noqa: E501
+            "filter_spec": (FilterSpec,),  # noqa: E501
         }
 
     @cached_property
@@ -108,9 +111,10 @@ class HeatMapChart(ModelNormal):
 
     attribute_map = {
         "data": "data",  # noqa: E501
+        "type": "type",  # noqa: E501
         "xlabel": "xlabel",  # noqa: E501
         "ylabel": "ylabel",  # noqa: E501
-        "name": "name",  # noqa: E501
+        "filter_spec": "filter_spec",  # noqa: E501
     }
 
     read_only_vars = {}
@@ -119,11 +123,14 @@ class HeatMapChart(ModelNormal):
 
     @classmethod
     @convert_js_args_to_python_args
-    def _from_openapi_data(cls, data, xlabel, ylabel, *args, **kwargs):  # noqa: E501
+    def _from_openapi_data(
+        cls, data, type, xlabel, ylabel, *args, **kwargs
+    ):  # noqa: E501
         """HeatMapChart - a model defined in OpenAPI
 
         Args:
-            data ([HeatMapChartData]):
+            data ([[bool, date, datetime, dict, float, int, list, str, none_type]]):
+            type (str):
             xlabel (str):
             ylabel (str):
 
@@ -158,11 +165,11 @@ class HeatMapChart(ModelNormal):
                                 Animal class but this time we won't travel
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
-            name (str): [optional]  # noqa: E501
+            filter_spec (FilterSpec): [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
-        _spec_property_naming = kwargs.pop("_spec_property_naming", False)
+        _spec_property_naming = kwargs.pop("_spec_property_naming", True)
         _path_to_item = kwargs.pop("_path_to_item", ())
         _configuration = kwargs.pop("_configuration", None)
         _visited_composed_classes = kwargs.pop("_visited_composed_classes", ())
@@ -170,15 +177,19 @@ class HeatMapChart(ModelNormal):
         self = super(OpenApiModel, cls).__new__(cls)
 
         if args:
-            raise ApiTypeError(
-                "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments."
-                % (
-                    args,
-                    self.__class__.__name__,
-                ),
-                path_to_item=_path_to_item,
-                valid_classes=(self.__class__,),
-            )
+            for arg in args:
+                if isinstance(arg, dict):
+                    kwargs.update(arg)
+                else:
+                    raise ApiTypeError(
+                        "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments."
+                        % (
+                            args,
+                            self.__class__.__name__,
+                        ),
+                        path_to_item=_path_to_item,
+                        valid_classes=(self.__class__,),
+                    )
 
         self._data_store = {}
         self._check_type = _check_type
@@ -188,6 +199,7 @@ class HeatMapChart(ModelNormal):
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
         self.data = data
+        self.type = type
         self.xlabel = xlabel
         self.ylabel = ylabel
         for var_name, var_value in kwargs.items():
@@ -214,11 +226,12 @@ class HeatMapChart(ModelNormal):
     )
 
     @convert_js_args_to_python_args
-    def __init__(self, data, xlabel, ylabel, *args, **kwargs):  # noqa: E501
+    def __init__(self, data, type, xlabel, ylabel, *args, **kwargs):  # noqa: E501
         """HeatMapChart - a model defined in OpenAPI
 
         Args:
-            data ([HeatMapChartData]):
+            data ([[bool, date, datetime, dict, float, int, list, str, none_type]]):
+            type (str):
             xlabel (str):
             ylabel (str):
 
@@ -253,7 +266,7 @@ class HeatMapChart(ModelNormal):
                                 Animal class but this time we won't travel
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
-            name (str): [optional]  # noqa: E501
+            filter_spec (FilterSpec): [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
@@ -263,15 +276,19 @@ class HeatMapChart(ModelNormal):
         _visited_composed_classes = kwargs.pop("_visited_composed_classes", ())
 
         if args:
-            raise ApiTypeError(
-                "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments."
-                % (
-                    args,
-                    self.__class__.__name__,
-                ),
-                path_to_item=_path_to_item,
-                valid_classes=(self.__class__,),
-            )
+            for arg in args:
+                if isinstance(arg, dict):
+                    kwargs.update(arg)
+                else:
+                    raise ApiTypeError(
+                        "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments."
+                        % (
+                            args,
+                            self.__class__.__name__,
+                        ),
+                        path_to_item=_path_to_item,
+                        valid_classes=(self.__class__,),
+                    )
 
         self._data_store = {}
         self._check_type = _check_type
@@ -281,6 +298,7 @@ class HeatMapChart(ModelNormal):
         self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
 
         self.data = data
+        self.type = type
         self.xlabel = xlabel
         self.ylabel = ylabel
         for var_name, var_value in kwargs.items():
