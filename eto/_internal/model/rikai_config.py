@@ -91,6 +91,8 @@ class RikaiConfig(ModelNormal):
             "dataset_name": (str,),  # noqa: E501
             "url": (str,),  # noqa: E501
             "mode": (str,),  # noqa: E501
+            "partition": ([str],),  # noqa: E501
+            "primary_key": (str,),  # noqa: E501
         }
 
     @cached_property
@@ -101,6 +103,8 @@ class RikaiConfig(ModelNormal):
         "dataset_name": "dataset_name",  # noqa: E501
         "url": "url",  # noqa: E501
         "mode": "mode",  # noqa: E501
+        "partition": "partition",  # noqa: E501
+        "primary_key": "primary_key",  # noqa: E501
     }
 
     read_only_vars = {}
@@ -148,10 +152,12 @@ class RikaiConfig(ModelNormal):
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
             mode (str): append or overwrite if dataset already exists. [optional]  # noqa: E501
+            partition ([str]): which field(s) to partition the dataset on. [optional]  # noqa: E501
+            primary_key (str): the primary key column of the dataset.. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
-        _spec_property_naming = kwargs.pop("_spec_property_naming", False)
+        _spec_property_naming = kwargs.pop("_spec_property_naming", True)
         _path_to_item = kwargs.pop("_path_to_item", ())
         _configuration = kwargs.pop("_configuration", None)
         _visited_composed_classes = kwargs.pop("_visited_composed_classes", ())
@@ -159,15 +165,19 @@ class RikaiConfig(ModelNormal):
         self = super(OpenApiModel, cls).__new__(cls)
 
         if args:
-            raise ApiTypeError(
-                "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments."
-                % (
-                    args,
-                    self.__class__.__name__,
-                ),
-                path_to_item=_path_to_item,
-                valid_classes=(self.__class__,),
-            )
+            for arg in args:
+                if isinstance(arg, dict):
+                    kwargs.update(arg)
+                else:
+                    raise ApiTypeError(
+                        "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments."
+                        % (
+                            args,
+                            self.__class__.__name__,
+                        ),
+                        path_to_item=_path_to_item,
+                        valid_classes=(self.__class__,),
+                    )
 
         self._data_store = {}
         self._check_type = _check_type
@@ -241,6 +251,8 @@ class RikaiConfig(ModelNormal):
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
             mode (str): append or overwrite if dataset already exists. [optional]  # noqa: E501
+            partition ([str]): which field(s) to partition the dataset on. [optional]  # noqa: E501
+            primary_key (str): the primary key column of the dataset.. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop("_check_type", True)
@@ -250,15 +262,19 @@ class RikaiConfig(ModelNormal):
         _visited_composed_classes = kwargs.pop("_visited_composed_classes", ())
 
         if args:
-            raise ApiTypeError(
-                "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments."
-                % (
-                    args,
-                    self.__class__.__name__,
-                ),
-                path_to_item=_path_to_item,
-                valid_classes=(self.__class__,),
-            )
+            for arg in args:
+                if isinstance(arg, dict):
+                    kwargs.update(arg)
+                else:
+                    raise ApiTypeError(
+                        "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments."
+                        % (
+                            args,
+                            self.__class__.__name__,
+                        ),
+                        path_to_item=_path_to_item,
+                        valid_classes=(self.__class__,),
+                    )
 
         self._data_store = {}
         self._check_type = _check_type

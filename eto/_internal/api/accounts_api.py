@@ -13,7 +13,7 @@ import sys  # noqa: F401
 
 from eto._internal.api_client import ApiClient
 from eto._internal.api_client import Endpoint as _Endpoint
-from eto._internal.model.inline_object import InlineObject
+from eto._internal.model.create_project_request import CreateProjectRequest
 from eto._internal.model_utils import (  # noqa: F401
     check_allowed_values,
     check_validations,
@@ -73,7 +73,7 @@ class AccountsApi(object):
                 "allowed_values": {},
                 "openapi_types": {
                     "project": (str,),
-                    "body": (InlineObject,),
+                    "body": (CreateProjectRequest,),
                 },
                 "attribute_map": {
                     "project": "project",
@@ -222,7 +222,7 @@ class AccountsApi(object):
 
         Args:
             project (str): project name
-            body (InlineObject):
+            body (CreateProjectRequest):
 
         Keyword Args:
             _return_http_data_only (bool): response data without head status
@@ -250,6 +250,10 @@ class AccountsApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
@@ -266,6 +270,7 @@ class AccountsApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         kwargs["project"] = project
         kwargs["body"] = body
         return self.create_project_endpoint.call_with_http_info(**kwargs)
@@ -306,6 +311,10 @@ class AccountsApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
@@ -322,6 +331,7 @@ class AccountsApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         return self.get_token_endpoint.call_with_http_info(**kwargs)
 
     def list_projects(self, **kwargs):
@@ -360,6 +370,10 @@ class AccountsApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
@@ -376,6 +390,7 @@ class AccountsApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         return self.list_projects_endpoint.call_with_http_info(**kwargs)
 
     def regenerate_token(self, **kwargs):
@@ -414,6 +429,10 @@ class AccountsApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
@@ -430,4 +449,5 @@ class AccountsApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         return self.regenerate_token_endpoint.call_with_http_info(**kwargs)

@@ -14,7 +14,7 @@ import sys  # noqa: F401
 from eto._internal.api_client import ApiClient
 from eto._internal.api_client import Endpoint as _Endpoint
 from eto._internal.model.create_model_request import CreateModelRequest
-from eto._internal.model.inline_response2004 import InlineResponse2004
+from eto._internal.model.list_models200_response import ListModels200Response
 from eto._internal.model.model import Model
 from eto._internal.model_utils import (  # noqa: F401
     check_allowed_values,
@@ -199,7 +199,7 @@ class ModelApi(object):
         )
         self.list_models_endpoint = _Endpoint(
             settings={
-                "response_type": (InlineResponse2004,),
+                "response_type": (ListModels200Response,),
                 "auth": [],
                 "endpoint_path": "/api/v1/projects/{project_id}/models",
                 "operation_id": "list_models",
@@ -278,6 +278,10 @@ class ModelApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
@@ -294,6 +298,7 @@ class ModelApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         kwargs["project_id"] = project_id
         kwargs["model_name"] = model_name
         kwargs["body"] = body
@@ -338,6 +343,10 @@ class ModelApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
@@ -354,6 +363,7 @@ class ModelApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         kwargs["project_id"] = project_id
         kwargs["model_name"] = model_name
         return self.delete_model_endpoint.call_with_http_info(**kwargs)
@@ -397,6 +407,10 @@ class ModelApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
@@ -413,6 +427,7 @@ class ModelApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         kwargs["project_id"] = project_id
         kwargs["model_name"] = model_name
         return self.get_model_endpoint.call_with_http_info(**kwargs)
@@ -455,10 +470,14 @@ class ModelApi(object):
             _host_index (int/None): specifies the index of the server
                 that we want to use.
                 Default is read from the configuration.
+            _request_auths (list): set to override the auth_settings for an a single
+                request; this effectively ignores the authentication
+                in the spec for a single request.
+                Default is None
             async_req (bool): execute request asynchronously
 
         Returns:
-            InlineResponse2004
+            ListModels200Response
                 If the method is called asynchronously, returns the request
                 thread.
         """
@@ -471,5 +490,6 @@ class ModelApi(object):
         kwargs["_spec_property_naming"] = kwargs.get("_spec_property_naming", False)
         kwargs["_content_type"] = kwargs.get("_content_type")
         kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["_request_auths"] = kwargs.get("_request_auths", None)
         kwargs["project_id"] = project_id
         return self.list_models_endpoint.call_with_http_info(**kwargs)
